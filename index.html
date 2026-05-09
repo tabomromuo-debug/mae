@@ -1,0 +1,864 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Minha Mãe - Com Amor Infinito</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #fff0f5 25%, #ffe4e1 50%, #fff8f0 75%, #f0fff0 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #4a2c2a;
+        }
+
+        /* Floating hearts background */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main content */
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        .hero h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem;
+            color: #c0392b;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: #8e44ad;
+            font-style: italic;
+            animation: fadeIn 2s ease-out 0.5s both;
+        }
+
+        .big-heart {
+            font-size: 5rem;
+            display: block;
+            margin: 20px auto;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.15); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(192, 57, 43, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(192, 57, 43, 0.6); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Message cards */
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            margin: 30px 0;
+            box-shadow: 0 8px 32px rgba(192, 57, 43, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0;
+        }
+
+        .card.visible {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(192, 57, 43, 0.25);
+        }
+
+        .card:nth-child(even) {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .card:nth-child(odd) {
+            border-right: 5px solid #8e44ad;
+        }
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #c0392b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card p {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #5d4037;
+            text-align: justify;
+        }
+
+        .card .emoji {
+            font-size: 2rem;
+        }
+
+        /* Quote section */
+        .quote-section {
+            text-align: center;
+            padding: 50px 20px;
+            margin: 40px 0;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(142, 68, 173, 0.1));
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-section::before {
+            content: '"';
+            font-family: 'Great Vibes', cursive;
+            font-size: 8rem;
+            color: rgba(192, 57, 43, 0.15);
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            line-height: 1;
+        }
+
+        .quote-section::after {
+            content: '"';
+            font-family: 'Great Vibes', cursive;
+            font-size: 8rem;
+            color: rgba(192, 57, 43, 0.15);
+            position: absolute;
+            bottom: -60px;
+            right: 20px;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: #c0392b;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+        }
+
+        .quote-author {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            color: #8e44ad;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* Gratitude list */
+        .gratitude-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .gratitude-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            border-top: 4px solid #e74c3c;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .gratitude-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gratitude-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(192, 57, 43, 0.2);
+        }
+
+        .gratitude-item .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .gratitude-item h3 {
+            font-family: 'Playfair Display', serif;
+            color: #c0392b;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .gratitude-item p {
+            font-size: 0.95rem;
+            color: #6d4c41;
+            line-height: 1.6;
+        }
+
+        /* Final message */
+        .final-message {
+            text-align: center;
+            padding: 60px 30px;
+            background: linear-gradient(135deg, #c0392b, #8e44ad);
+            border-radius: 25px;
+            margin: 40px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .final-message::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .final-message h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-message p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            margin-top: 30px;
+            color: #ffeaa7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Photo placeholder */
+        .photo-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .photo-frame {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 8px solid #fff;
+            box-shadow: 0 10px 40px rgba(192, 57, 43, 0.3);
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .photo-label {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            color: #c0392b;
+            margin-top: 20px;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            text-align: center;
+            padding: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        .scroll-indicator span {
+            font-size: 2rem;
+            color: #c0392b;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, #e74c3c, #8e44ad);
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 30px;
+            position: relative;
+            margin: 30px 0;
+            width: 50%;
+            opacity: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-left: 30px;
+            padding-right: 0;
+            margin-left: 50%;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+        }
+
+        .timeline-item:nth-child(odd).visible {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .timeline-item:nth-child(even).visible {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 300px;
+            position: relative;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 15px;
+            height: 15px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px #e74c3c;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            right: -38px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            left: -38px;
+        }
+
+        .timeline-content .year {
+            font-family: 'Playfair Display', serif;
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .timeline-content .memory {
+            font-size: 0.95rem;
+            color: #5d4037;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                width: 100%;
+                margin-left: 0;
+                justify-content: flex-start;
+                padding-left: 50px;
+                padding-right: 0;
+            }
+
+            .timeline-content::after {
+                left: -38px !important;
+                right: auto !important;
+            }
+
+            .quote-text {
+                font-size: 1.8rem;
+            }
+
+            .final-message h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Music note animation */
+        .music-notes {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2rem;
+            z-index: 10;
+            animation: musicFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes musicFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+
+        /* Sparkle effect */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <div class="content">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Para Minha Mãe</h1>
+            <span class="big-heart">❤️</span>
+            <p class="subtitle">O amor mais puro e verdadeiro que já conheci</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>⬇️</span>
+            <p style="color: #c0392b; font-size: 0.9rem; margin-top: 5px;">Role para descobrir</p>
+        </div>
+
+        <!-- Photo Section -->
+        <div class="photo-section">
+            <div class="photo-frame">
+                👩‍👧‍👦
+            </div>
+            <p class="photo-label">Minha Heroína</p>
+        </div>
+
+        <!-- Opening Message -->
+        <div class="card" data-animate>
+            <h2><span class="emoji">💌</span> Uma Carta de Amor</h2>
+            <p>
+                Mãe, existem palavras que o coração sente, mas a boca nunca consegue dizer com a mesma intensidade. 
+                Este site é minha tentativa de traduzir em pixels e código o que sinto por você todos os dias. 
+                Você é a razão pela qual eu acredito no amor incondicional, no sacrifício silencioso e na força 
+                que vem do cuidado. Cada página deste site carrega um pedacinho da gratidão que tenho por ter 
+                você como minha mãe.
+            </p>
+        </div>
+
+        <!-- Quote -->
+        <div class="quote-section">
+            <p class="quote-text">
+                A mãe é o único ser no mundo<br>
+                que não conhece o egoísmo
+            </p>
+            <p class="quote-author">— Victor Hugo</p>
+        </div>
+
+        <!-- Gratitude Grid -->
+        <div class="card" data-animate>
+            <h2 style="text-align: center; justify-content: center;"><span class="emoji">🙏</span> O Que Eu Agradeço</h2>
+        </div>
+
+        <div class="gratitude-grid">
+            <div class="gratitude-item" data-animate-delay>
+                <span class="icon">🤗</span>
+                <h3>Seu Abraço</h3>
+                <p>O abraço que cura qualquer dor, que acalma qualquer tempestade e que me faz sentir em casa, não importa onde esteja.</p>
+            </div>
+            <div class="gratitude-item" data-animate-delay>
+                <span class="icon">🍲</span>
+                <h3>Seu Cuidado</h3>
+                <p>Cada refeição preparada com amor, cada noite em que ficou acordada quando eu estava doente, cada detalhe que ninguém mais notaria.</p>
+            </div>
+            <div class="gratitude-item" data-animate-delay>
+                <span class="icon">🎓</span>
+                <h3>Seu Ensinamento</h3>
+                <p>Os valores que você me ensinou são a bússola que guia minha vida. Sua sabedoria é meu maior tesouro.</p>
+            </div>
+            <div class="gratitude-item" data-animate-delay>
+                <span class="icon">💪</span>
+                <h3>Sua Força</h3>
+                <p>A força que você demonstra mesmo quando está cansada, mesmo quando ninguém vê. Você é minha inspiração diária.</p>
+            </div>
+            <div class="gratitude-item" data-animate-delay>
+                <span class="icon">🌙</span>
+                <h3>Sua Presença</h3>
+                <p>Estar presente nos momentos bons e ruins, nos dias de sol e nos dias de chuva. Sua presença é meu porto seguro.</p>
+            </div>
+            <div class="gratitude-item" data-animate-delay>
+                <span class="icon">✨</span>
+                <h3>Seu Amor</h3>
+                <p>Um amor que não pede nada em troca, que dá sem medir, que perdida sem contar e que ama sem limites.</p>
+            </div>
+        </div>
+
+        <!-- Memories Timeline -->
+        <div class="card" data-animate>
+            <h2 style="text-align: center; justify-content: center;"><span class="emoji">📸</span> Memórias que Guardo no Coração</h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item" data-animate>
+                <div class="timeline-content">
+                    <p class="year">Minha Infância</p>
+                    <p class="memory">Quando você me embalava para dormir, cantando aquelas canções que até hoje me trazem paz.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-animate>
+                <div class="timeline-content">
+                    <p class="year">Meus Medos</p>
+                    <p class="memory">Quando eu tinha pesadelos e você vinha até o meu quarto, segurando minha mão até eu dormir de novo.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-animate>
+                <div class="timeline-content">
+                    <p class="year">Minhas Conquistas</p>
+                    <p class="memory">Cada vez que eu conseguia algo, por menor que fosse, seu olho brilhava de orgulho como se eu tivesse conquistado o mundo.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-animate>
+                <div class="timeline-content">
+                    <p class="year">Minhas Quedas</p>
+                    <p class="memory">Quando eu caía, você não me levantava imediatamente — primeiro me ensinava que eu podia levantar sozinho.</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-animate>
+                <div class="timeline-content">
+                    <p class="year">Agora e Sempre</p>
+                    <p class="memory">Cada ligação, cada mensagem, cada "tudo bem?" que você me manda. Cada vez que me lembra de cuidar de mim.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deep Message -->
+        <div class="card" data-animate>
+            <h2><span class="emoji">🌹</span> O Que Você Significa Para Mim</h2>
+            <p>
+                Mãe, você é o primeiro amor que eu conheci e será o último que eu esquecerei. Você é a pessoa 
+                que me viu nascer, que me viu crescer, que me viu errar e me viu aprender. Você é a única pessoa 
+                no mundo que conhece minha história completa — desde o primeiro choro até os sonhos que ainda 
+                não realizei.
+                <br><br>
+                Obrigado por cada noite em que dormiu pouco para que eu dormisse bem. Obrigado por cada refeição 
+                que deixou de comer para que eu tivesse o suficiente. Obrigado por cada sonho que você adiou para 
+                que eu pudesse realizar os meus. Obrigado por cada lágrima que você escondeu para que eu não visse 
+                sua dor, e por cada sorriso que você forçou mesmo quando estava cansada.
+                <br><br>
+                Você não é perfeita — e é exatamente por isso que você é perfeita para mim. Seus defeitos são 
+                parte do que te torna humana, e sua humanidade é o que me ensinou a amar de verdade. Você me 
+                ensinou que amar não é sobre ser perfeito, é sobre estar presente.
+            </p>
+        </div>
+
+        <!-- Second Quote -->
+        <div class="quote-section">
+            <p class="quote-text">
+                Deus não podia estar em toda parte,<br>
+                por isso criou as mães
+            </p>
+            <p class="quote-author">— Provérbio Judaico</p>
+        </div>
+
+        <!-- Promise -->
+        <div class="card" data-animate>
+            <h2><span class="emoji">🤝</span> Minha Promessa</h2>
+            <p>
+                Prometo fazer de tudo para que você se orgulhe de mim, não pelas minhas conquistas, mas pelo 
+                tipo de pessoa que eu me tornei — e você é a principal responsável por isso. Prometo lembrar 
+                de ligar, de visitar, de perguntar como você está — não só quando preciso de algo, mas porque 
+                eu realmente quero saber. Prometo cuidar de você da mesma forma que você cuidou de mim, com 
+                paciência, com amor, com dedicação.
+                <br><br>
+                Prometo que, quando você envelhecer e precisar de mim, eu estarei lá. Da mesma forma que você 
+                esteve lá para mim quando eu era pequeno e não conseguia fazer nada sozinho. Prometo que nenhum 
+                sucesso no mundo será maior do que a felicidade de saber que você está bem.
+            </p>
+        </div>
+
+        <!-- Final Message -->
+        <div class="final-message">
+            <h2>Eu Te Amo, Mãe</h2>
+            <p>
+                Se eu pudesse, daria o mundo para você. Mas como não posso, dou o que tenho de mais precioso: 
+                meu amor eterno, minha gratidão infinita e a promessa de que você sempre será a pessoa mais 
+                importante da minha vida. Obrigado por ser minha mãe. Obrigado por me escolher todos os dias. 
+                Obrigado por nunca desistir de mim. Eu te amo mais do que as palavras podem expressar, mais do 
+                que este site pode mostrar, mais do que qualquer distância pode separar.
+            </p>
+            <p class="signature">Com todo o meu amor,<br>Seu Filho</p>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 30px; color: #8e44ad; font-style: italic;">
+            <p>Feito com ❤️ especialmente para você</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Cada coração flutuante representa um motivo pelo qual eu te amo</p>
+        </div>
+    </div>
+
+    <div class="music-notes">🎵 🎶</div>
+
+    <script>
+        // Generate floating hearts
+        const heartsContainer = document.getElementById('heartsContainer');
+        const heartEmojis = ['❤️', '💖', '💗', '💓', '💕', '💝', '💘', '🌸', '✨', '🌹'];
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 12000);
+        }
+
+        // Create initial hearts
+        for (let i = 0; i < 15; i++) {
+            setTimeout(createHeart, i * 300);
+        }
+
+        // Continue creating hearts
+        setInterval(createHeart, 800);
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe cards
+        document.querySelectorAll('[data-animate]').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Observe gratitude items with stagger
+        const gratitudeObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 150);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('[data-animate-delay]').forEach(el => {
+            gratitudeObserver.observe(el);
+        });
+
+        // Observe timeline items
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 200);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-item').forEach(el => {
+            timelineObserver.observe(el);
+        });
+
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // Add sparkle effect on click
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 5; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = e.clientX + (Math.random() - 0.5) * 50 + 'px';
+                sparkle.style.top = e.clientY + (Math.random() - 0.5) * 50 + 'px';
+                sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 2000);
+            }
+        });
+    </script>
+</body>
+</html>
