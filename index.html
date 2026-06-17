@@ -14,6 +14,7 @@
             -webkit-tap-highlight-color: transparent;
             touch-action: none;
             -webkit-user-select: none; user-select: none;
+            -webkit-touch-callout: none;
         }
 
         html, body {
@@ -29,21 +30,6 @@
             align-items: center;
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
-
-        /* Audio unlock hint */
-        .audio-hint {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: rgba(0, 229, 255, 0.3);
-            font-size: 14px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            z-index: 500;
-            pointer-events: none;
-            transition: opacity 0.5s;
-        }
-        .audio-hint.hidden { opacity: 0; }
 
         .scanlines {
             position: fixed; inset: 0;
@@ -87,9 +73,6 @@
             display: flex; justify-content: center; align-items: center;
             transition: transform 0.15s ease;
         }
-        .led-eye:active .eye-housing {
-            transform: scale(0.95);
-        }
         .led-screen {
             width: 72%; height: 72%; border-radius: 50%;
             background: #06060a; position: relative;
@@ -132,63 +115,175 @@
             transition: all 0.5s ease;
         }
 
-        /* EXPRESSIONS */
+        /* ========== EXPRESSIONS ========== */
+
+        /* normal */
         .led-shape.normal .led-dot { opacity: 1; transform: translate(-50%, -50%); }
         .led-shape.normal .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
+        /* happy */
         .led-shape.happy .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
         .led-shape.happy .led-bar { opacity: 1; width: 38px; height: 9px; border-radius: 0 0 19px 19px; background: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.45), 0 0 25px rgba(0,255,136,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 5px)); }
 
+        /* sad */
         .led-shape.sad .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
         .led-shape.sad .led-bar { opacity: 1; width: 34px; height: 9px; border-radius: 17px 17px 0 0; background: #4488ff; box-shadow: 0 0 10px rgba(68,136,255,0.45), 0 0 25px rgba(68,136,255,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% - 5px)); }
 
+        /* angry */
         .led-shape.angry .led-dot { opacity: 1; width: 10px; height: 10px; background: #ff3344; box-shadow: 0 0 10px rgba(255,51,68,0.55), 0 0 25px rgba(255,51,68,0.28), inset 0 0 3px rgba(255,255,255,0.2); transform: translate(-50%, -50%); }
         .led-shape.angry .led-bar { opacity: 1; width: 40px; height: 3px; border-radius: 1.5px; background: #ff3344; box-shadow: 0 0 8px rgba(255,51,68,0.45), 0 0 20px rgba(255,51,68,0.2), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, calc(-50% - 10px)); }
 
+        /* surprised */
         .led-shape.surprised .led-dot { opacity: 1; width: 30px; height: 30px; background: #00ccff; box-shadow: 0 0 15px rgba(0,204,255,0.55), 0 0 40px rgba(0,204,255,0.28), inset 0 0 6px rgba(255,255,255,0.3); transform: translate(-50%, -50%); }
         .led-shape.surprised .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
-        .led-shape.love .led-dot { opacity: 1; width: 12px; height: 12px; background: #ff66aa; box-shadow: 0 0 10px rgba(255,102,170,0.55), 0 0 25px rgba(255,102,170,0.28), inset 0 0 3px rgba(255,255,255,0.2); transform: translate(-50%, -50%); }
-        .led-shape.love .led-bar { opacity: 1; width: 32px; height: 14px; border-radius: 0 0 16px 16px; background: #ff66aa; box-shadow: 0 0 10px rgba(255,102,170,0.45), 0 0 25px rgba(255,102,170,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 3px)); }
-
+        /* sleepy */
         .led-shape.sleepy .led-dot { opacity: 0.18; width: 8px; height: 8px; background: #557799; box-shadow: 0 0 4px rgba(85,119,153,0.2), 0 0 10px rgba(85,119,153,0.06); transform: translate(-50%, -50%); }
         .led-shape.sleepy .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
+        /* squint */
         .led-shape.squint .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
         .led-shape.squint .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #ffaa00; box-shadow: 0 0 8px rgba(255,170,0,0.45), 0 0 20px rgba(255,170,0,0.2), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
 
+        /* thinking */
         .led-shape.thinking .led-dot { opacity: 1; width: 10px; height: 10px; background: #aa88ff; box-shadow: 0 0 8px rgba(170,136,255,0.45), 0 0 20px rgba(170,136,255,0.22), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(calc(-50% + 10px), calc(-50% - 8px)); }
         .led-shape.thinking .led-bar { opacity: 1; width: 22px; height: 4px; border-radius: 2px; background: #aa88ff; box-shadow: 0 0 6px rgba(170,136,255,0.35), 0 0 15px rgba(170,136,255,0.15), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(calc(-50% - 5px), calc(-50% + 10px)) rotate(-12deg); }
 
+        /* confused */
         .led-shape.confused .led-dot { opacity: 1; width: 8px; height: 8px; background: #ff8844; box-shadow: 0 0 8px rgba(255,136,68,0.45), 0 0 20px rgba(255,136,68,0.22), inset 0 0 2px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
         .led-shape.confused .led-bar { opacity: 1; width: 34px; height: 4px; border-radius: 2px; background: #ff8844; box-shadow: 0 0 6px rgba(255,136,68,0.35), 0 0 15px rgba(255,136,68,0.15), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, -50%) rotate(18deg); }
 
+        /* neutral */
         .led-shape.neutral .led-dot { opacity: 1; width: 6px; height: 6px; background: #88aabb; box-shadow: 0 0 5px rgba(136,170,187,0.3), 0 0 12px rgba(136,170,187,0.1); transform: translate(calc(-50% - 10px), calc(-50% - 2px)); }
         .led-shape.neutral .led-bar { opacity: 1; width: 28px; height: 3px; border-radius: 1.5px; background: #88aabb; box-shadow: 0 0 5px rgba(136,170,187,0.3), 0 0 12px rgba(136,170,187,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(calc(-50% + 6px), calc(-50% - 2px)); }
 
+        /* shock */
         .led-shape.shock .led-dot { opacity: 1; width: 22px; height: 22px; background: #ffffff; box-shadow: 0 0 12px rgba(255,255,255,0.45), 0 0 30px rgba(255,255,255,0.18), inset 0 0 5px rgba(200,240,255,0.3); transform: translate(-50%, -50%); }
         .led-shape.shock .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
+        /* excited */
         .led-shape.excited .led-dot { opacity: 1; width: 14px; height: 14px; background: #ffdd00; box-shadow: 0 0 12px rgba(255,221,0,0.55), 0 0 30px rgba(255,221,0,0.28), inset 0 0 4px rgba(255,255,255,0.3); transform: translate(-50%, -50%); }
         .led-shape.excited .led-bar { opacity: 1; width: 42px; height: 10px; border-radius: 0 0 21px 21px; background: #ffdd00; box-shadow: 0 0 10px rgba(255,221,0,0.45), 0 0 25px rgba(255,221,0,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 6px)); }
 
+        /* worried */
         .led-shape.worried .led-dot { opacity: 1; width: 8px; height: 8px; background: #cc88ff; box-shadow: 0 0 6px rgba(204,136,255,0.4), 0 0 15px rgba(204,136,255,0.15); transform: translate(-50%, calc(-50% + 4px)); }
         .led-shape.worried .led-bar { opacity: 1; width: 32px; height: 3px; border-radius: 1.5px; background: #cc88ff; box-shadow: 0 0 5px rgba(204,136,255,0.3), 0 0 12px rgba(204,136,255,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, calc(-50% - 8px)) rotate(-5deg); }
 
-        .led-shape.blink .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .led-shape.blink .led-bar { opacity: 1; width: 46px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 6px rgba(0,229,255,0.35), 0 0 15px rgba(0,229,255,0.12), inset 0 0 2px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
-
-        .led-shape.wink .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .led-shape.wink .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 5px rgba(0,229,255,0.3), 0 0 12px rgba(0,229,255,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, -50%); }
-
+        /* shy */
         .led-shape.shy .led-dot { opacity: 1; width: 10px; height: 10px; background: #ff88aa; box-shadow: 0 0 8px rgba(255,136,170,0.5), 0 0 20px rgba(255,136,170,0.25); transform: translate(calc(-50% - 6px), calc(-50% + 2px)); }
         .led-shape.shy .led-bar { opacity: 1; width: 24px; height: 4px; border-radius: 2px; background: #ff88aa; box-shadow: 0 0 5px rgba(255,136,170,0.4), 0 0 12px rgba(255,136,170,0.15); transform: translate(calc(-50% + 8px), calc(-50% + 2px)); }
 
+        /* curious */
         .led-shape.curious .led-dot { opacity: 1; width: 12px; height: 12px; background: #66ddff; box-shadow: 0 0 8px rgba(102,221,255,0.5), 0 0 20px rgba(102,221,255,0.25); transform: translate(calc(-50% + 5px), calc(-50% - 2px)); }
         .led-shape.curious .led-bar { opacity: 1; width: 20px; height: 3px; border-radius: 1.5px; background: #66ddff; box-shadow: 0 0 5px rgba(102,221,255,0.4), 0 0 12px rgba(102,221,255,0.15); transform: translate(calc(-50% - 6px), calc(-50% + 6px)) rotate(8deg); }
 
+        /* content */
         .led-shape.content .led-dot { opacity: 1; width: 10px; height: 10px; background: #88ffaa; box-shadow: 0 0 8px rgba(136,255,170,0.45), 0 0 20px rgba(136,255,170,0.2); transform: translate(-50%, -50%); }
         .led-shape.content .led-bar { opacity: 1; width: 36px; height: 7px; border-radius: 0 0 18px 18px; background: #88ffaa; box-shadow: 0 0 8px rgba(136,255,170,0.4), 0 0 18px rgba(136,255,170,0.18); transform: translate(-50%, calc(-50% + 4px)); }
+
+        /* dizzy - olhos em espiral/x */
+        .led-shape.dizzy .led-dot { opacity: 1; width: 6px; height: 6px; background: #ffcc00; box-shadow: 0 0 8px rgba(255,204,0,0.5), 0 0 18px rgba(255,204,0,0.2); transform: translate(-50%, -50%); }
+        .led-shape.dizzy .led-bar { opacity: 1; width: 28px; height: 4px; border-radius: 2px; background: #ffcc00; box-shadow: 0 0 8px rgba(255,204,0,0.4), 0 0 16px rgba(255,204,0,0.15); transform: translate(-50%, -50%) rotate(45deg); }
+
+        /* focused - olhos finos concentrados */
+        .led-shape.focused .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+        .led-shape.focused .led-bar { opacity: 1; width: 44px; height: 2px; border-radius: 1px; background: #00ffcc; box-shadow: 0 0 10px rgba(0,255,204,0.5), 0 0 22px rgba(0,255,204,0.2); transform: translate(-50%, -50%); }
+
+        /* suspicious - olhos desconfiados estreitos */
+        .led-shape.suspicious .led-dot { opacity: 1; width: 7px; height: 7px; background: #ff6633; box-shadow: 0 0 8px rgba(255,102,51,0.45), 0 0 18px rgba(255,102,51,0.2); transform: translate(-50%, -50%); }
+        .led-shape.suspicious .led-bar { opacity: 1; width: 40px; height: 2px; border-radius: 1px; background: #ff6633; box-shadow: 0 0 8px rgba(255,102,51,0.4), 0 0 16px rgba(255,102,51,0.15); transform: translate(-50%, -50%) rotate(-8deg); }
+
+        /* scan - olhos escaneando */
+        .led-shape.scan .led-dot { opacity: 1; width: 4px; height: 20px; border-radius: 2px; background: #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.5), 0 0 25px rgba(0,255,102,0.25); transform: translate(-50%, -50%); }
+        .led-shape.scan .led-bar { opacity: 1; width: 36px; height: 2px; border-radius: 1px; background: #00ff66; box-shadow: 0 0 8px rgba(0,255,102,0.35), 0 0 16px rgba(0,255,102,0.12); transform: translate(-50%, -50%); }
+
+        /* loading - olhos tipo barra de progresso */
+        .led-shape.loading .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+        .led-shape.loading .led-bar { opacity: 1; width: 16px; height: 8px; border-radius: 4px; background: #00ccff; box-shadow: 0 0 10px rgba(0,204,255,0.45), 0 0 22px rgba(0,204,255,0.2); transform: translate(-50%, -50%); }
+
+        /* error - olhos de erro x vermelho */
+        .led-shape.error .led-dot { opacity: 1; width: 5px; height: 5px; background: #ff0033; box-shadow: 0 0 8px rgba(255,0,51,0.6), 0 0 18px rgba(255,0,51,0.3); transform: translate(-50%, -50%); }
+        .led-shape.error .led-bar { opacity: 1; width: 34px; height: 3px; border-radius: 1.5px; background: #ff0033; box-shadow: 0 0 8px rgba(255,0,51,0.5), 0 0 16px rgba(255,0,51,0.2); transform: translate(-50%, -50%) rotate(45deg); }
+
+        /* alert - olhos de alerta piscando */
+        .led-shape.alert .led-dot { opacity: 1; width: 14px; height: 14px; background: #ff4400; box-shadow: 0 0 12px rgba(255,68,0,0.6), 0 0 28px rgba(255,68,0,0.3); transform: translate(-50%, -50%); animation: alertPulse 0.6s ease-in-out infinite alternate; }
+        .led-shape.alert .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
+
+        /* music - olhos notas musicais ondulados */
+        .led-shape.music .led-dot { opacity: 1; width: 8px; height: 8px; background: #ff66ff; box-shadow: 0 0 10px rgba(255,102,255,0.55), 0 0 22px rgba(255,102,255,0.28); transform: translate(-50%, -50%); animation: musicBounce 0.5s ease-in-out infinite alternate; }
+        .led-shape.music .led-bar { opacity: 1; width: 32px; height: 6px; border-radius: 0 0 16px 16px; background: #ff66ff; box-shadow: 0 0 10px rgba(255,102,255,0.45), 0 0 18px rgba(255,102,255,0.2); transform: translate(-50%, calc(-50% + 3px)); }
+
+        /* charging - bateria carregando */
+        .led-shape.charging .led-dot { opacity: 1; width: 12px; height: 16px; border-radius: 2px; background: #ffcc00; box-shadow: 0 0 10px rgba(255,204,0,0.55), 0 0 22px rgba(255,204,0,0.28); transform: translate(-50%, -50%); }
+        .led-shape.charging .led-bar { opacity: 1; width: 30px; height: 3px; border-radius: 1.5px; background: #ffcc00; box-shadow: 0 0 8px rgba(255,204,0,0.4), 0 0 16px rgba(255,204,0,0.18); transform: translate(-50%, calc(-50% + 10px)); }
+
+        /* lowbattery - bateria baixa */
+        .led-shape.lowbattery .led-dot { opacity: 1; width: 8px; height: 8px; background: #ff2200; box-shadow: 0 0 8px rgba(255,34,0,0.5), 0 0 16px rgba(255,34,0,0.2); transform: translate(-50%, -50%); animation: lowBattBlink 1s ease-in-out infinite; }
+        .led-shape.lowbattery .led-bar { opacity: 1; width: 20px; height: 3px; border-radius: 1.5px; background: #ff2200; box-shadow: 0 0 6px rgba(255,34,0,0.4), 0 0 12px rgba(255,34,0,0.15); transform: translate(-50%, calc(-50% + 8px)); }
+
+        /* wifi - procurando sinal */
+        .led-shape.wifi .led-dot { opacity: 1; width: 5px; height: 5px; border-radius: 50%; background: #00ddff; box-shadow: 0 0 8px rgba(0,221,255,0.5), 0 0 16px rgba(0,221,255,0.2); transform: translate(-50%, -50%); }
+        .led-shape.wifi .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #00ddff; box-shadow: 0 0 8px rgba(0,221,255,0.4), 0 0 16px rgba(0,221,255,0.15); transform: translate(-50%, -50%); }
+
+        /* lock - cadeado fechado */
+        .led-shape.lock .led-dot { opacity: 1; width: 8px; height: 8px; background: #ff5555; box-shadow: 0 0 8px rgba(255,85,85,0.5), 0 0 16px rgba(255,85,85,0.2); transform: translate(-50%, -50%); }
+        .led-shape.lock .led-bar { opacity: 1; width: 28px; height: 12px; border-radius: 4px; background: #ff5555; box-shadow: 0 0 10px rgba(255,85,85,0.4), 0 0 18px rgba(255,85,85,0.18); transform: translate(-50%, calc(-50% + 4px)); }
+
+        /* unlock - cadeado aberto */
+        .led-shape.unlock .led-dot { opacity: 1; width: 8px; height: 8px; background: #55ff55; box-shadow: 0 0 8px rgba(85,255,85,0.5), 0 0 16px rgba(85,255,85,0.2); transform: translate(-50%, -50%); }
+        .led-shape.unlock .led-bar { opacity: 1; width: 28px; height: 12px; border-radius: 4px 4px 0 0; background: #55ff55; box-shadow: 0 0 10px rgba(85,255,85,0.4), 0 0 18px rgba(85,255,85,0.18); transform: translate(-50%, calc(-50% + 4px)); }
+
+        /* party - festa */
+        .led-shape.party .led-dot { opacity: 1; width: 10px; height: 10px; background: #ff00ff; box-shadow: 0 0 12px rgba(255,0,255,0.6), 0 0 25px rgba(255,0,255,0.3); transform: translate(-50%, -50%); animation: partyGlow 0.3s ease-in-out infinite alternate; }
+        .led-shape.party .led-bar { opacity: 1; width: 40px; height: 8px; border-radius: 0 0 20px 20px; background: #00ffff; box-shadow: 0 0 12px rgba(0,255,255,0.5), 0 0 22px rgba(0,255,255,0.25); transform: translate(-50%, calc(-50% + 4px)); }
+
+        /* cool - oculos escuros */
+        .led-shape.cool .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+        .led-shape.cool .led-bar { opacity: 1; width: 46px; height: 14px; border-radius: 7px; background: #222; box-shadow: inset 0 0 8px rgba(0,0,0,0.8), 0 0 10px rgba(0,229,255,0.2); border: 1.5px solid rgba(0,229,255,0.15); transform: translate(-50%, -50%); }
+
+        /* blink */
+        .led-shape.blink .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+        .led-shape.blink .led-bar { opacity: 1; width: 46px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 6px rgba(0,229,255,0.35), 0 0 15px rgba(0,229,255,0.12), inset 0 0 2px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
+
+        /* wink */
+        .led-shape.wink .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+        .led-shape.wink .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 5px rgba(0,229,255,0.3), 0 0 12px rgba(0,229,255,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, -50%); }
+
+        /* Animations for expressions */
+        @keyframes alertPulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+        }
+        @keyframes musicBounce {
+            0% { transform: translate(-50%, -50%); }
+            100% { transform: translate(-50%, calc(-50% - 4px)); }
+        }
+        @keyframes lowBattBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        @keyframes partyGlow {
+            0% { box-shadow: 0 0 12px rgba(255,0,255,0.6), 0 0 25px rgba(255,0,255,0.3); }
+            100% { box-shadow: 0 0 18px rgba(0,255,255,0.6), 0 0 35px rgba(0,255,255,0.35); }
+        }
+        @keyframes scanLine {
+            0% { transform: translate(-50%, -50%) scaleX(0); }
+            50% { transform: translate(-50%, -50%) scaleX(1); }
+            100% { transform: translate(-50%, -50%) scaleX(0); }
+        }
+        @keyframes loadingSlide {
+            0% { transform: translate(calc(-50% - 10px), -50%); }
+            50% { transform: translate(calc(-50% + 10px), -50%); }
+            100% { transform: translate(calc(-50% - 10px), -50%); }
+        }
+        @keyframes dizzySpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        @keyframes wave {
+            0%, 100% { transform: translateX(-50%) scaleY(1); }
+            50% { transform: translateX(-50%) scaleY(1.6); }
+        }
 
         /* MOUTH */
         .mouth {
@@ -199,6 +294,8 @@
             box-shadow: 0 0 8px rgba(0,229,255,0.05);
             transition: all 0.4s ease;
         }
+
+        /* Basic mouths */
         .mouth.smile { width: 30px; height: 10px; border-radius: 0 0 15px 15px; background: rgba(0,255,136,0.07); border-bottom: 2px solid rgba(0,255,136,0.15); box-shadow: 0 0 10px rgba(0,255,136,0.05); }
         .mouth.frown { width: 26px; height: 8px; border-radius: 13px 13px 0 0; background: rgba(68,136,255,0.05); border-top: 2px solid rgba(68,136,255,0.12); box-shadow: 0 0 8px rgba(68,136,255,0.03); }
         .mouth.o { width: 12px; height: 18px; border-radius: 50%; background: rgba(0,204,255,0.07); border: 2px solid rgba(0,204,255,0.12); box-shadow: 0 0 10px rgba(0,204,255,0.03); }
@@ -208,6 +305,89 @@
         .mouth.shy { width: 16px; height: 8px; border-radius: 0 0 8px 8px; background: rgba(255,136,170,0.06); border-bottom: 2px solid rgba(255,136,170,0.12); }
         .mouth.curious { width: 14px; height: 3px; border-radius: 1.5px; background: rgba(102,221,255,0.1); transform: translateX(-50%) rotate(-5deg); }
         .mouth.content { width: 28px; height: 6px; border-radius: 0 0 14px 14px; background: rgba(136,255,170,0.06); border-bottom: 2px solid rgba(136,255,170,0.1); }
+
+        /* New mouths */
+        .mouth.dizzy { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,204,0,0.06); border: 2px solid rgba(255,204,0,0.12); box-shadow: 0 0 8px rgba(255,204,0,0.04); animation: mouthDizzy 0.5s linear infinite; }
+        .mouth.focused { width: 14px; height: 2px; border-radius: 1px; background: rgba(0,255,204,0.15); box-shadow: 0 0 6px rgba(0,255,204,0.06); }
+        .mouth.suspicious { width: 16px; height: 2px; border-radius: 1px; background: rgba(255,102,51,0.12); transform: translateX(-50%) rotate(-6deg); box-shadow: 0 0 6px rgba(255,102,51,0.04); }
+        .mouth.scan { width: 20px; height: 2px; border-radius: 1px; background: rgba(0,255,102,0.12); box-shadow: 0 0 8px rgba(0,255,102,0.05); animation: mouthScan 1s ease-in-out infinite; }
+        .mouth.loading { width: 24px; height: 4px; border-radius: 2px; background: rgba(0,204,255,0.06); overflow: hidden; }
+        .mouth.loading::after {
+            content: ''; position: absolute; left: 0; top: 0; width: 8px; height: 100%;
+            background: rgba(0,204,255,0.25); border-radius: 2px;
+            animation: mouthLoading 0.8s ease-in-out infinite;
+        }
+        .mouth.error { width: 24px; height: 2px; border-radius: 1px; background: rgba(255,0,51,0.15); box-shadow: 0 0 8px rgba(255,0,51,0.06); animation: mouthError 0.4s ease-in-out infinite; }
+        .mouth.alert { width: 18px; height: 10px; border-radius: 0 0 9px 9px; background: rgba(255,68,0,0.06); border-bottom: 2px solid rgba(255,68,0,0.12); box-shadow: 0 0 8px rgba(255,68,0,0.04); animation: mouthAlert 0.6s ease-in-out infinite alternate; }
+        .mouth.music { width: 22px; height: 6px; border-radius: 0 0 11px 11px; background: rgba(255,102,255,0.05); border-bottom: 2px solid rgba(255,102,255,0.1); box-shadow: 0 0 8px rgba(255,102,255,0.03); animation: mouthMusic 0.4s ease-in-out infinite alternate; }
+        .mouth.charging { width: 14px; height: 18px; border-radius: 2px; background: rgba(255,204,0,0.05); border: 2px solid rgba(255,204,0,0.12); position: relative; box-shadow: 0 0 8px rgba(255,204,0,0.03); }
+        .mouth.charging::after {
+            content: ''; position: absolute; top: 3px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 3px solid transparent; border-right: 3px solid transparent;
+            border-bottom: 6px solid rgba(255,204,0,0.3);
+        }
+        .mouth.lowbattery { width: 14px; height: 18px; border-radius: 2px; background: rgba(255,34,0,0.04); border: 2px solid rgba(255,34,0,0.1); position: relative; box-shadow: 0 0 6px rgba(255,34,0,0.03); animation: mouthLowBatt 1s ease-in-out infinite; }
+        .mouth.lowbattery::after {
+            content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%);
+            width: 6px; height: 3px; background: rgba(255,34,0,0.15); border-radius: 1px 1px 0 0;
+        }
+        .mouth.wifi { width: 20px; height: 3px; border-radius: 1.5px; background: rgba(0,221,255,0.08); box-shadow: 0 0 6px rgba(0,221,255,0.03); position: relative; }
+        .mouth.wifi::before {
+            content: ''; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid rgba(0,221,255,0.08); border-bottom-color: transparent;
+        }
+        .mouth.lock { width: 16px; height: 14px; border-radius: 2px; background: rgba(255,85,85,0.05); border: 2px solid rgba(255,85,85,0.1); position: relative; box-shadow: 0 0 6px rgba(255,85,85,0.03); }
+        .mouth.lock::after {
+            content: ''; position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+            width: 8px; height: 8px; border-radius: 50%;
+            border: 2px solid rgba(255,85,85,0.1); border-bottom: none;
+        }
+        .mouth.unlock { width: 16px; height: 14px; border-radius: 2px; background: rgba(85,255,85,0.05); border: 2px solid rgba(85,255,85,0.1); position: relative; box-shadow: 0 0 6px rgba(85,255,85,0.03); }
+        .mouth.unlock::after {
+            content: ''; position: absolute; top: -5px; left: 60%; transform: translateX(-50%) rotate(30deg);
+            width: 8px; height: 8px; border-radius: 50%;
+            border: 2px solid rgba(85,255,85,0.1); border-bottom: none;
+        }
+        .mouth.party { width: 30px; height: 12px; border-radius: 0 0 15px 15px; background: rgba(255,0,255,0.05); border-bottom: 2px solid rgba(255,0,255,0.12); box-shadow: 0 0 12px rgba(255,0,255,0.06); animation: mouthParty 0.3s ease-in-out infinite alternate; }
+        .mouth.cool { width: 24px; height: 2px; border-radius: 1px; background: rgba(0,229,255,0.12); box-shadow: 0 0 6px rgba(0,229,255,0.04); }
+        .mouth.worried { width: 24px; height: 6px; border-radius: 12px 12px 0 0; background: rgba(204,136,255,0.04); border-top: 2px solid rgba(204,136,255,0.1); box-shadow: 0 0 6px rgba(204,136,255,0.03); }
+
+        /* Mouth animations */
+        @keyframes mouthDizzy {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+        @keyframes mouthScan {
+            0%, 100% { width: 10px; opacity: 0.5; }
+            50% { width: 24px; opacity: 1; }
+        }
+        @keyframes mouthLoading {
+            0% { left: 0; }
+            50% { left: calc(100% - 8px); }
+            100% { left: 0; }
+        }
+        @keyframes mouthError {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            25% { transform: translateX(-50%) rotate(-3deg); }
+            75% { transform: translateX(-50%) rotate(3deg); }
+        }
+        @keyframes mouthAlert {
+            0% { height: 4px; }
+            100% { height: 12px; }
+        }
+        @keyframes mouthMusic {
+            0% { transform: translateX(-50%) scaleY(1); }
+            100% { transform: translateX(-50%) scaleY(1.4); }
+        }
+        @keyframes mouthLowBatt {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        @keyframes mouthParty {
+            0% { border-bottom-color: rgba(255,0,255,0.12); }
+            100% { border-bottom-color: rgba(0,255,255,0.12); }
+        }
 
         /* STATUS */
         .status {
@@ -226,8 +406,23 @@
             letter-spacing: 1px; text-align: center;
             z-index: 10; line-height: 2;
             transition: opacity 0.6s;
+            max-width: 90vw;
         }
         .hint.hidden { opacity: 0; pointer-events: none; }
+
+        .audio-hint {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(0, 229, 255, 0.3);
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 500;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        .audio-hint.hidden { opacity: 0; }
 
         .corner {
             position: fixed; width: 20px; height: 20px;
@@ -244,9 +439,40 @@
 
         @keyframes twitch { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(1px, -1px); } 75% { transform: translate(-1px, 1px); } }
         .twitch { animation: twitch 0.15s ease-in-out 2; }
+
+        /* Boot overlay */
+        .boot-overlay {
+            position: fixed; inset: 0; background: #050508; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 20px;
+            transition: opacity 1s ease;
+        }
+        .boot-overlay.hidden { opacity: 0; pointer-events: none; }
+        .boot-bar {
+            width: 120px; height: 3px; background: rgba(0,229,255,0.1);
+            border-radius: 2px; overflow: hidden;
+        }
+        .boot-fill {
+            width: 0%; height: 100%; background: #00e5ff;
+            box-shadow: 0 0 10px rgba(0,229,255,0.5);
+            animation: bootFill 1.5s ease-in-out forwards;
+        }
+        .boot-text {
+            color: rgba(0,229,255,0.3); font-size: 10px;
+            letter-spacing: 4px; text-transform: uppercase;
+        }
+        @keyframes bootFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
     </style>
 </head>
 <body>
+    <div class="boot-overlay" id="boot-overlay">
+        <div class="boot-text">INICIANDO</div>
+        <div class="boot-bar"><div class="boot-fill"></div></div>
+    </div>
+
     <div class="audio-hint" id="audio-hint">toque para iniciar</div>
 
     <div class="scanlines"></div>
@@ -261,7 +487,7 @@
     <div class="status" id="status">ROBO ONLINE</div>
 
     <div class="face-container breathing" id="face">
-        <div class="led-eye" id="eye-left">
+        <div class="led-eye" id="eye-left" data-side="left">
             <div class="eye-housing">
                 <div class="led-screen">
                     <div class="led-grid"></div>
@@ -273,7 +499,7 @@
                 </div>
             </div>
         </div>
-        <div class="led-eye" id="eye-right">
+        <div class="led-eye" id="eye-right" data-side="right">
             <div class="eye-housing">
                 <div class="led-screen">
                     <div class="led-grid"></div>
@@ -289,31 +515,31 @@
     </div>
 
     <div class="hint" id="hint">
-        toque nos olhos &middot; passe o dedo &middot; incline o celular
+        toque olho esquerdo/direito &middot; swipe cima/baixo/lados &middot; double tap dormir &middot; sacudir choque
     </div>
 
     <script>
-        // ===== AUDIO ENGINE - always tries to init on every interaction =====
+    (function() {
+        'use strict';
+
+        // ===== AUDIO ENGINE =====
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
         let masterGain = null;
-        let audioUnlocked = false;
 
         function ensureAudio() {
             if (!audioCtx) {
                 try {
                     audioCtx = new AudioCtx();
                     masterGain = audioCtx.createGain();
-                    masterGain.gain.value = 0.6;
+                    masterGain.gain.value = 0.5;
                     masterGain.connect(audioCtx.destination);
                 } catch(e) { return false; }
             }
             if (audioCtx.state === 'suspended') {
-                audioCtx.resume().then(() => { audioUnlocked = true; });
-            } else {
-                audioUnlocked = true;
+                audioCtx.resume().catch(() => {});
             }
-            return audioUnlocked;
+            return !!audioCtx;
         }
 
         function playTone(freq, dur, type, vol) {
@@ -329,7 +555,7 @@
                 osc.type = type || 'sine';
                 filter.type = 'lowpass';
                 filter.frequency.value = 3000;
-                gain.gain.setValueAtTime(vol || 0.05, audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol || 0.04, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + (dur || 0.1));
                 osc.start(audioCtx.currentTime);
                 osc.stop(audioCtx.currentTime + (dur || 0.1));
@@ -337,7 +563,7 @@
         }
 
         function playChord(freqs, dur, vol) {
-            freqs.forEach((f, i) => setTimeout(() => playTone(f, dur, 'sine', vol), i * 70));
+            freqs.forEach((f, i) => setTimeout(() => playTone(f, dur, 'sine', vol), i * 60));
         }
 
         function playSlide(from, to, dur, vol) {
@@ -349,7 +575,7 @@
                 gain.connect(masterGain || audioCtx.destination);
                 osc.frequency.setValueAtTime(from, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(to, audioCtx.currentTime + dur);
-                gain.gain.setValueAtTime(vol || 0.035, audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol || 0.03, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
                 osc.start(audioCtx.currentTime);
                 osc.stop(audioCtx.currentTime + dur);
@@ -358,31 +584,46 @@
 
         // ===== SOUND LIBRARY =====
         const sounds = {
-            blink: () => { playTone(800, 0.05, 'sine', 0.03); setTimeout(() => playTone(600, 0.05, 'sine', 0.025), 80); },
-            wink: () => { playTone(700, 0.06, 'sine', 0.035); setTimeout(() => playTone(950, 0.04, 'sine', 0.025), 100); },
-            touch: () => playTone(1300 + Math.random() * 300, 0.05, 'sine', 0.025),
-            pet: () => { playSlide(500, 1000, 0.2, 0.03); setTimeout(() => playSlide(1000, 1400, 0.15, 0.02), 250); },
-            happy: () => playChord([523, 659, 784], 0.25, 0.03),
-            love: () => playChord([523, 659, 784, 1047], 0.3, 0.025),
+            blink: () => { playTone(800, 0.05, 'sine', 0.025); setTimeout(() => playTone(600, 0.05, 'sine', 0.02), 80); },
+            wink: () => { playTone(700, 0.06, 'sine', 0.03); setTimeout(() => playTone(950, 0.04, 'sine', 0.02), 100); },
+            touch: () => playTone(1300 + Math.random() * 300, 0.05, 'sine', 0.02),
+            happy: () => playChord([523, 659, 784], 0.2, 0.025),
             surprised: () => { playTone(400, 0.03); setTimeout(() => playTone(900, 0.12), 50); setTimeout(() => playTone(1400, 0.06), 180); },
-            sad: () => { playTone(330, 0.25); setTimeout(() => playTone(262, 0.22), 250); },
-            angry: () => playTone(80, 0.4, 'sawtooth', 0.045),
-            sleepy: () => playTone(140, 0.5, 'sine', 0.018),
-            squint: () => playTone(220, 0.18, 'triangle', 0.035),
+            sad: () => { playTone(330, 0.22); setTimeout(() => playTone(262, 0.2), 220); },
+            angry: () => playTone(80, 0.35, 'sawtooth', 0.035),
+            sleepy: () => playTone(140, 0.45, 'sine', 0.015),
+            squint: () => playTone(220, 0.15, 'triangle', 0.03),
             confused: () => { playTone(380, 0.08); setTimeout(() => playTone(320, 0.08), 100); setTimeout(() => playTone(380, 0.1), 200); },
             shock: () => { playTone(300, 0.05); setTimeout(() => playTone(700, 0.08), 60); setTimeout(() => playTone(1200, 0.15), 150); },
-            excited: () => playChord([523, 659, 784, 1047], 0.18, 0.03),
-            worried: () => { playTone(370, 0.15); setTimeout(() => playTone(330, 0.18), 150); },
-            shy: () => { playSlide(900, 500, 0.3, 0.025); setTimeout(() => playSlide(500, 800, 0.2, 0.018), 350); },
+            excited: () => playChord([523, 659, 784, 1047], 0.15, 0.025),
+            worried: () => { playTone(370, 0.12); setTimeout(() => playTone(330, 0.16), 140); },
+            shy: () => { playSlide(900, 500, 0.25, 0.02); setTimeout(() => playSlide(500, 800, 0.18, 0.015), 300); },
             curious: () => { playTone(500, 0.06); setTimeout(() => playTone(700, 0.1), 120); setTimeout(() => playTone(600, 0.08), 250); },
-            content: () => playChord([440, 554, 659], 0.35, 0.022),
-            boot: () => { [200, 320, 450, 580, 720].forEach((f, i) => setTimeout(() => playTone(f, 0.12 + i * 0.02, 'sine', 0.04), i * 120)); },
-            swoosh: () => playSlide(300, 900, 0.18, 0.03),
-            boop: () => playTone(1800, 0.04, 'sine', 0.02),
+            content: () => playChord([440, 554, 659], 0.3, 0.018),
+            boot: () => { [200, 320, 450, 580, 720].forEach((f, i) => setTimeout(() => playTone(f, 0.1 + i * 0.02, 'sine', 0.035), i * 100)); },
+            swoosh: () => playSlide(300, 900, 0.15, 0.025),
+            boop: () => playTone(1800, 0.04, 'sine', 0.018),
+            dizzy: () => { playTone(350, 0.1); setTimeout(() => playTone(280, 0.1), 120); setTimeout(() => playTone(200, 0.15), 240); },
+            focused: () => playTone(600, 0.08, 'sine', 0.02),
+            suspicious: () => { playTone(200, 0.12, 'triangle', 0.025); setTimeout(() => playTone(180, 0.14, 'triangle', 0.025), 150); },
+            scan: () => { playTone(440, 0.04); setTimeout(() => playTone(660, 0.04), 60); setTimeout(() => playTone(880, 0.04), 120); },
+            loading: () => playChord([440, 554], 0.08, 0.015),
+            error: () => { playTone(150, 0.2, 'sawtooth', 0.03); setTimeout(() => playTone(100, 0.25, 'sawtooth', 0.03), 200); },
+            alert: () => { playTone(800, 0.08); setTimeout(() => playTone(800, 0.08), 150); },
+            music: () => playChord([523, 659, 784], 0.12, 0.022),
+            charging: () => { playSlide(300, 600, 0.15, 0.02); setTimeout(() => playTone(800, 0.1, 'sine', 0.02), 200); },
+            lowbattery: () => { playTone(300, 0.15, 'sine', 0.02); setTimeout(() => playTone(250, 0.2, 'sine', 0.02), 400); },
+            wifi: () => { playTone(600, 0.05); setTimeout(() => playTone(800, 0.05), 80); setTimeout(() => playTone(1000, 0.06), 160); },
+            lock: () => playTone(400, 0.15, 'sine', 0.025),
+            unlock: () => playTone(600, 0.15, 'sine', 0.025),
+            party: () => playChord([523, 659, 784, 1047, 1319], 0.2, 0.025),
+            cool: () => { playSlide(400, 200, 0.3, 0.025); setTimeout(() => playTone(150, 0.2, 'triangle', 0.02), 300); },
         };
 
         // ===== VIBRATION =====
-        function vibrate(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
+        function vibrate(pattern) {
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        }
 
         // ===== WAKE LOCK =====
         let wakeLock = null;
@@ -395,7 +636,7 @@
 
         function goFullscreen() {
             const elem = document.documentElement;
-            if (elem.requestFullscreen) elem.requestFullscreen();
+            if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
             else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
             else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
         }
@@ -403,8 +644,13 @@
         // ===== EYE TRACKING =====
         let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
         let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+        let trackingEnabled = true;
 
         function updateTracking() {
+            if (!trackingEnabled) {
+                requestAnimationFrame(updateTracking);
+                return;
+            }
             const leftEye = document.getElementById('eye-left').getBoundingClientRect();
             const maxOffset = 10;
             targetX = Math.max(-maxOffset, Math.min(maxOffset, (mouseX - (leftEye.left + leftEye.width / 2)) / 10));
@@ -418,29 +664,43 @@
         }
 
         document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-        document.addEventListener('touchmove', e => { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; }, { passive: true });
-        document.addEventListener('touchstart', e => { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchmove', e => { if (e.touches.length) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; } }, { passive: true });
+        document.addEventListener('touchstart', e => { if (e.touches.length) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; } }, { passive: true });
         updateTracking();
 
         // ===== EXPRESSIONS =====
         const expressions = {
-            normal: { name: 'NORMAL', shape: 'normal', mouth: '', ring: 'rgba(0,229,255,0.04)', ambient: 'rgba(0,200,255,0.015)' },
-            happy: { name: 'FELIZ', shape: 'happy', mouth: 'smile', ring: 'rgba(0,255,136,0.07)', ambient: 'rgba(0,255,136,0.015)' },
-            sad: { name: 'TRISTE', shape: 'sad', mouth: 'frown', ring: 'rgba(68,136,255,0.05)', ambient: 'rgba(68,136,255,0.01)' },
-            angry: { name: 'BRAVO', shape: 'angry', mouth: 'line', ring: 'rgba(255,51,68,0.05)', ambient: 'rgba(255,51,68,0.01)' },
-            surprised: { name: 'SURPRESO', shape: 'surprised', mouth: 'o', ring: 'rgba(0,204,255,0.07)', ambient: 'rgba(0,204,255,0.015)' },
-            love: { name: 'AMOR', shape: 'love', mouth: 'smile', ring: 'rgba(255,102,170,0.07)', ambient: 'rgba(255,102,170,0.015)' },
-            sleepy: { name: 'SONO', shape: 'sleepy', mouth: '', ring: 'rgba(85,119,153,0.025)', ambient: 'rgba(85,119,153,0.005)' },
-            squint: { name: 'DESCONFIADO', shape: 'squint', mouth: 'line', ring: 'rgba(255,170,0,0.05)', ambient: 'rgba(255,170,0,0.01)' },
-            thinking: { name: 'PENSANDO', shape: 'thinking', mouth: 'line', ring: 'rgba(170,136,255,0.05)', ambient: 'rgba(170,136,255,0.01)' },
-            confused: { name: 'CONFUSO', shape: 'confused', mouth: 'o', ring: 'rgba(255,136,68,0.05)', ambient: 'rgba(255,136,68,0.01)' },
-            neutral: { name: 'MEH', shape: 'neutral', mouth: 'neutral', ring: 'rgba(136,170,187,0.03)', ambient: 'rgba(136,170,187,0.008)' },
-            shock: { name: 'CHOQUE', shape: 'shock', mouth: 'o', ring: 'rgba(255,255,255,0.06)', ambient: 'rgba(255,255,255,0.015)' },
-            excited: { name: 'ANIMADO', shape: 'excited', mouth: 'grin', ring: 'rgba(255,221,0,0.07)', ambient: 'rgba(255,221,0,0.015)' },
-            worried: { name: 'PREOCUPADO', shape: 'worried', mouth: 'frown', ring: 'rgba(204,136,255,0.05)', ambient: 'rgba(204,136,255,0.01)' },
-            shy: { name: 'TIMIDO', shape: 'shy', mouth: 'shy', ring: 'rgba(255,136,170,0.06)', ambient: 'rgba(255,136,170,0.012)' },
-            curious: { name: 'CURIOSO', shape: 'curious', mouth: 'curious', ring: 'rgba(102,221,255,0.06)', ambient: 'rgba(102,221,255,0.012)' },
-            content: { name: 'CONTENTE', shape: 'content', mouth: 'content', ring: 'rgba(136,255,170,0.05)', ambient: 'rgba(136,255,170,0.01)' },
+            normal:     { name: 'NORMAL',      shape: 'normal',     mouth: '',           ring: 'rgba(0,229,255,0.04)',   ambient: 'rgba(0,200,255,0.015)',  hasTracking: true },
+            happy:      { name: 'FELIZ',       shape: 'happy',      mouth: 'smile',        ring: 'rgba(0,255,136,0.07)',   ambient: 'rgba(0,255,136,0.015)',  hasTracking: true },
+            sad:        { name: 'TRISTE',      shape: 'sad',        mouth: 'frown',        ring: 'rgba(68,136,255,0.05)',  ambient: 'rgba(68,136,255,0.01)',  hasTracking: true },
+            angry:      { name: 'BRAVO',       shape: 'angry',      mouth: 'line',         ring: 'rgba(255,51,68,0.05)',   ambient: 'rgba(255,51,68,0.01)',   hasTracking: true },
+            surprised:  { name: 'SURPRESO',    shape: 'surprised',  mouth: 'o',            ring: 'rgba(0,204,255,0.07)',   ambient: 'rgba(0,204,255,0.015)',  hasTracking: true },
+            sleepy:     { name: 'SONO',        shape: 'sleepy',     mouth: '',             ring: 'rgba(85,119,153,0.025)', ambient: 'rgba(85,119,153,0.005)', hasTracking: false },
+            squint:     { name: 'DESCONFIADO', shape: 'squint',     mouth: 'line',         ring: 'rgba(255,170,0,0.05)',   ambient: 'rgba(255,170,0,0.01)',   hasTracking: true },
+            thinking:   { name: 'PENSANDO',    shape: 'thinking',   mouth: 'line',         ring: 'rgba(170,136,255,0.05)', ambient: 'rgba(170,136,255,0.01)', hasTracking: true },
+            confused:   { name: 'CONFUSO',     shape: 'confused',   mouth: 'o',            ring: 'rgba(255,136,68,0.05)',  ambient: 'rgba(255,136,68,0.01)',  hasTracking: true },
+            neutral:    { name: 'MEH',         shape: 'neutral',    mouth: 'neutral',      ring: 'rgba(136,170,187,0.03)', ambient: 'rgba(136,170,187,0.008)', hasTracking: true },
+            shock:      { name: 'CHOQUE',      shape: 'shock',      mouth: 'o',            ring: 'rgba(255,255,255,0.06)', ambient: 'rgba(255,255,255,0.015)', hasTracking: false },
+            excited:    { name: 'ANIMADO',     shape: 'excited',    mouth: 'grin',         ring: 'rgba(255,221,0,0.07)',   ambient: 'rgba(255,221,0,0.015)',  hasTracking: true },
+            worried:    { name: 'PREOCUPADO',  shape: 'worried',    mouth: 'worried',      ring: 'rgba(204,136,255,0.05)', ambient: 'rgba(204,136,255,0.01)', hasTracking: true },
+            shy:        { name: 'TIMIDO',      shape: 'shy',        mouth: 'shy',          ring: 'rgba(255,136,170,0.06)', ambient: 'rgba(255,136,170,0.012)', hasTracking: true },
+            curious:    { name: 'CURIOSO',     shape: 'curious',    mouth: 'curious',      ring: 'rgba(102,221,255,0.06)', ambient: 'rgba(102,221,255,0.012)', hasTracking: true },
+            content:    { name: 'CONTENTE',    shape: 'content',    mouth: 'content',      ring: 'rgba(136,255,170,0.05)', ambient: 'rgba(136,255,170,0.01)',  hasTracking: true },
+            dizzy:      { name: 'TONTO',       shape: 'dizzy',      mouth: 'dizzy',        ring: 'rgba(255,204,0,0.06)',   ambient: 'rgba(255,204,0,0.012)',  hasTracking: true },
+            focused:    { name: 'FOCADO',      shape: 'focused',    mouth: 'focused',      ring: 'rgba(0,255,204,0.06)',   ambient: 'rgba(0,255,204,0.012)',  hasTracking: false },
+            suspicious: { name: 'SUSPEITO',    shape: 'suspicious', mouth: 'suspicious',   ring: 'rgba(255,102,51,0.06)',  ambient: 'rgba(255,102,51,0.012)', hasTracking: true },
+            scan:       { name: 'ESCANEANDO',  shape: 'scan',       mouth: 'scan',         ring: 'rgba(0,255,102,0.06)',   ambient: 'rgba(0,255,102,0.012)',  hasTracking: false },
+            loading:    { name: 'CARREGANDO',  shape: 'loading',    mouth: 'loading',      ring: 'rgba(0,204,255,0.06)',   ambient: 'rgba(0,204,255,0.012)',  hasTracking: false },
+            error:      { name: 'ERRO',        shape: 'error',      mouth: 'error',        ring: 'rgba(255,0,51,0.06)',    ambient: 'rgba(255,0,51,0.012)',   hasTracking: false },
+            alert:      { name: 'ALERTA',      shape: 'alert',      mouth: 'alert',        ring: 'rgba(255,68,0,0.06)',    ambient: 'rgba(255,68,0,0.012)',   hasTracking: false },
+            music:      { name: 'MUSICA',      shape: 'music',      mouth: 'music',        ring: 'rgba(255,102,255,0.06)', ambient: 'rgba(255,102,255,0.012)', hasTracking: true },
+            charging:   { name: 'CARREGANDO',  shape: 'charging',   mouth: 'charging',     ring: 'rgba(255,204,0,0.06)',   ambient: 'rgba(255,204,0,0.012)',  hasTracking: false },
+            lowbattery: { name: 'BATERIA',     shape: 'lowbattery', mouth: 'lowbattery',   ring: 'rgba(255,34,0,0.06)',    ambient: 'rgba(255,34,0,0.012)',   hasTracking: false },
+            wifi:       { name: 'WIFI',        shape: 'wifi',       mouth: 'wifi',         ring: 'rgba(0,221,255,0.06)',   ambient: 'rgba(0,221,255,0.012)',  hasTracking: false },
+            lock:       { name: 'BLOQUEADO',   shape: 'lock',       mouth: 'lock',         ring: 'rgba(255,85,85,0.06)',   ambient: 'rgba(255,85,85,0.012)',  hasTracking: false },
+            unlock:     { name: 'DESBLOQUEADO', shape: 'unlock',    mouth: 'unlock',       ring: 'rgba(85,255,85,0.06)',   ambient: 'rgba(85,255,85,0.012)',  hasTracking: false },
+            party:      { name: 'FESTA',       shape: 'party',      mouth: 'party',        ring: 'rgba(255,0,255,0.08)',   ambient: 'rgba(255,0,255,0.018)',  hasTracking: true },
+            cool:       { name: 'MANEIRO',     shape: 'cool',       mouth: 'cool',         ring: 'rgba(0,229,255,0.05)',   ambient: 'rgba(0,229,255,0.01)',   hasTracking: true },
         };
 
         let currentExpr = 'normal';
@@ -451,41 +711,61 @@
             const expr = expressions[key];
             if (!expr) return;
             currentExpr = key;
-            document.getElementById('status').textContent = expr.name;
-            document.getElementById('shape-left').className = 'led-shape ' + expr.shape;
-            document.getElementById('shape-right').className = 'led-shape ' + expr.shape;
-            document.getElementById('ring-left').style.borderColor = expr.ring;
-            document.getElementById('ring-right').style.borderColor = expr.ring;
-            document.getElementById('ambient').style.background = `radial-gradient(ellipse, ${expr.ambient}, transparent 70%)`;
-            document.getElementById('mouth').className = 'mouth ' + expr.mouth;
+            trackingEnabled = expr.hasTracking;
+
+            const statusEl = document.getElementById('status');
+            const shapeLeft = document.getElementById('shape-left');
+            const shapeRight = document.getElementById('shape-right');
+            const ringLeft = document.getElementById('ring-left');
+            const ringRight = document.getElementById('ring-right');
+            const ambient = document.getElementById('ambient');
+            const mouth = document.getElementById('mouth');
+
+            if (statusEl) statusEl.textContent = expr.name;
+            if (shapeLeft) shapeLeft.className = 'led-shape ' + expr.shape;
+            if (shapeRight) shapeRight.className = 'led-shape ' + expr.shape;
+            if (ringLeft) ringLeft.style.borderColor = expr.ring;
+            if (ringRight) ringRight.style.borderColor = expr.ring;
+            if (ambient) ambient.style.background = `radial-gradient(ellipse, ${expr.ambient}, transparent 70%)`;
+            if (mouth) mouth.className = 'mouth ' + expr.mouth;
+
             if (playSound !== false && sounds[key]) sounds[key]();
-            vibrate(6);
+            vibrate(5);
         }
 
-        // ===== BLINK =====
+        // ===== BLINK (mantido como pedido) =====
         function blink() {
-            if (currentExpr === 'sleepy') return;
+            if (currentExpr === 'sleepy' || currentExpr === 'shock') return;
             const leftShape = document.getElementById('shape-left');
             const rightShape = document.getElementById('shape-right');
+            if (!leftShape || !rightShape) {
+                scheduleBlink();
+                return;
+            }
             sounds.blink();
-            vibrate(3);
+            vibrate(2);
             const savedClass = 'led-shape ' + expressions[currentExpr].shape;
             leftShape.className = 'led-shape blink';
             rightShape.className = 'led-shape blink';
             setTimeout(() => {
-                if (currentExpr !== 'sleepy') {
+                if (currentExpr !== 'sleepy' && currentExpr !== 'shock') {
                     leftShape.className = savedClass;
                     rightShape.className = savedClass;
                 }
             }, 120);
-            setTimeout(blink, 2000 + Math.random() * 3000);
+            scheduleBlink();
+        }
+
+        function scheduleBlink() {
+            setTimeout(blink, 2500 + Math.random() * 4000);
         }
 
         // ===== WINK =====
         function wink(side) {
             sounds.wink();
-            vibrate(5);
+            vibrate(4);
             const shape = document.getElementById('shape-' + side);
+            if (!shape) return;
             const savedClass = 'led-shape ' + expressions[currentExpr].shape;
             shape.className = 'led-shape wink';
             setTimeout(() => { shape.className = savedClass; }, 220);
@@ -499,9 +779,11 @@
             const idleTime = Date.now() - lastInteract;
             if (idleTime > 12000 && currentExpr === 'normal') {
                 const r = Math.random();
-                if (r < 0.25) {
+                if (r < 0.2) {
+                    // Look around
                     const leftShape = document.getElementById('shape-left');
                     const rightShape = document.getElementById('shape-right');
+                    if (!leftShape || !rightShape) { scheduleIdle(); return; }
                     const baseTransform = leftShape.style.transform;
                     leftShape.style.transform = `translate(calc(-50% + 8px), calc(-50% - 2px))`;
                     rightShape.style.transform = `translate(calc(-50% + 8px), calc(-50% - 2px))`;
@@ -513,23 +795,30 @@
                         leftShape.style.transform = baseTransform;
                         rightShape.style.transform = baseTransform;
                     }, 800);
-                } else if (r < 0.45) {
+                } else if (r < 0.4) {
                     setExpression('sleepy', false);
                     setTimeout(() => { if (currentExpr === 'sleepy') setExpression('normal', false); }, 1500);
-                } else if (r < 0.65) {
+                } else if (r < 0.6) {
                     setExpression('curious', false);
                     setTimeout(() => { if (currentExpr === 'curious') setExpression('normal', false); }, 2000);
+                } else if (r < 0.8) {
+                    setExpression('thinking', false);
+                    setTimeout(() => { if (currentExpr === 'thinking') setExpression('normal', false); }, 2000);
                 }
             }
-            setTimeout(idleBehavior, 4000 + Math.random() * 4000);
+            scheduleIdle();
+        }
+
+        function scheduleIdle() {
+            setTimeout(idleBehavior, 5000 + Math.random() * 5000);
         }
 
         // ===== RANDOM EXPRESSIONS =====
         function scheduleRandomExpression() {
-            const delay = 10000 + Math.random() * 8000;
+            const delay = 12000 + Math.random() * 8000;
             setTimeout(() => {
                 if (Date.now() - lastInteract > 10000 && currentExpr === 'normal') {
-                    const gentleExprs = ['happy', 'curious', 'content', 'thinking', 'neutral'];
+                    const gentleExprs = ['happy', 'curious', 'content', 'thinking', 'neutral', 'focused'];
                     const pick = gentleExprs[Math.floor(Math.random() * gentleExprs.length)];
                     setExpression(pick, true);
                     setTimeout(() => { if (currentExpr === pick) setExpression('normal', false); }, 3000 + Math.random() * 2000);
@@ -538,169 +827,204 @@
             }, delay);
         }
 
-        // ===== INTERACTIONS =====
+        // ===== TOUCH / INTERACTION SYSTEM (bug-free) =====
+
+        // Track active touches to prevent duplicate handling
+        let activeTouchId = null;
+        let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
         let longPressTimer = null;
         let isLongPress = false;
         let rapidInterval = null;
+        let eyeTouchStart = { left: false, right: false };
 
-        function stopRapidCycle() {
+        function clearLongPress() {
+            if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
             if (rapidInterval) { clearInterval(rapidInterval); rapidInterval = null; }
         }
 
-        // ===== EYE INTERACTIONS (fixed) =====
+        function startLongPress() {
+            clearLongPress();
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                let rapidIndex = exprKeys.indexOf(currentExpr);
+                rapidInterval = setInterval(() => {
+                    rapidIndex = (rapidIndex + 1) % exprKeys.length;
+                    setExpression(exprKeys[rapidIndex], false);
+                    vibrate(2);
+                }, 300);
+            }, 600);
+        }
+
+        // Eye handlers
         ['left', 'right'].forEach(side => {
             const eye = document.getElementById('eye-' + side);
-            let petting = false;
-            let isLongPress = false;
-            let longPressTimer = null;
-            let rapidInterval = null;
-            let touchStartY = 0;
-            let touchStartTime = 0;
+            if (!eye) return;
 
-            function stopRapid() {
-                if (rapidInterval) { clearInterval(rapidInterval); rapidInterval = null; }
-                if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-            }
-
-            // TOUCH START
-            eye.addEventListener('touchstart', e => {
+            // Use pointer events for unified touch/mouse handling
+            eye.addEventListener('pointerdown', e => {
+                e.preventDefault();
+                e.stopPropagation();
                 ensureAudio();
                 requestWakeLock();
                 goFullscreen();
-                e.preventDefault();
-
-                const touch = e.touches[0];
-                touchStartY = touch.clientY;
-                touchStartTime = Date.now();
-
                 updateInteract();
-                isLongPress = false;
-                petting = false;
+                eyeTouchStart[side] = true;
 
                 sounds.touch();
-                vibrate(5);
-
-                // Long press = rapid cycle
-                longPressTimer = setTimeout(() => {
-                    isLongPress = true;
-                    let rapidIndex = exprKeys.indexOf(currentExpr);
-                    rapidInterval = setInterval(() => {
-                        rapidIndex = (rapidIndex + 1) % exprKeys.length;
-                        setExpression(exprKeys[rapidIndex], false);
-                        vibrate(3);
-                    }, 250);
-                }, 500);
+                vibrate(4);
 
                 // Wake up if sleepy
                 if (currentExpr === 'sleepy') {
-                    setTimeout(() => setExpression('surprised'), 100);
+                    setExpression('surprised');
                     setTimeout(() => setExpression('normal'), 600);
+                    return;
                 }
-            }, { passive: false });
 
-            // TOUCH MOVE (petting detection)
-            eye.addEventListener('touchmove', e => {
+                startLongPress();
+            });
+
+            eye.addEventListener('pointerup', e => {
                 e.preventDefault();
+                e.stopPropagation();
+                clearLongPress();
 
-                const touch = e.touches[0];
-                const dy = Math.abs(touch.clientY - touchStartY);
-                const dt = Date.now() - touchStartTime;
+                if (!eyeTouchStart[side]) return;
+                eyeTouchStart[side] = false;
 
-                // Petting: moved more than 30px vertically and held for 200ms+
-                if (dy > 30 && dt > 200 && !petting && !isLongPress) {
-                    petting = true;
-                    stopRapid();
-                    sounds.pet();
-                    vibrate([8, 12, 8, 12, 8]);
-                    setExpression('love');
-                }
-            }, { passive: false });
-
-            // TOUCH END
-            eye.addEventListener('touchend', e => {
-                stopRapid();
-                const dt = Date.now() - touchStartTime;
-
-                if (petting) {
-                    // Was petting - transition to happy then normal
-                    setTimeout(() => setExpression('happy'), 500);
-                    setTimeout(() => setExpression('normal'), 2500);
-                } else if (isLongPress) {
-                    // Was long press - stay at current expression
-                    // exprIndex already updated by rapid cycle
-                    exprIndex = exprKeys.indexOf(currentExpr);
-                } else if (dt < 500) {
+                if (!isLongPress) {
                     // Short tap = wink
                     wink(side);
+                } else {
+                    // Long press ended - stay at current expression
+                    exprIndex = exprKeys.indexOf(currentExpr);
                 }
-
-                petting = false;
                 isLongPress = false;
             });
 
-            // MOUSE (desktop fallback)
-            eye.addEventListener('mousedown', e => {
-                ensureAudio();
-                updateInteract();
-                sounds.touch();
-                vibrate(5);
+            eye.addEventListener('pointerleave', e => {
+                clearLongPress();
+                eyeTouchStart[side] = false;
+                isLongPress = false;
             });
 
-            eye.addEventListener('click', e => {
-                ensureAudio();
-                updateInteract();
-                wink(side);
+            eye.addEventListener('pointercancel', e => {
+                clearLongPress();
+                eyeTouchStart[side] = false;
+                isLongPress = false;
             });
         });
 
-        // Swipe
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchStartTime = 0;
+        // ===== SWIPE DETECTION (document level) =====
+        let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0;
+        let isSwiping = false;
 
         document.addEventListener('touchstart', e => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            touchStartTime = Date.now();
-        }, { passive: true });
-
-        document.addEventListener('touchend', e => {
-            const t = e.changedTouches[0];
-            const dx = t.clientX - touchStartX;
-            const dy = t.clientY - touchStartY;
-            const dt = Date.now() - touchStartTime;
-
-            if (dt < 400 && Math.abs(dx) > 50 && Math.abs(dy) < 80) {
-                ensureAudio();
-                updateInteract();
-                if (dx > 0) exprIndex = (exprIndex + 1) % exprKeys.length;
-                else exprIndex = (exprIndex - 1 + exprKeys.length) % exprKeys.length;
-                sounds.swoosh();
-                vibrate(6);
-                setExpression(exprKeys[exprIndex]);
+            if (e.touches.length === 1) {
+                swipeStartX = e.touches[0].clientX;
+                swipeStartY = e.touches[0].clientY;
+                swipeStartTime = Date.now();
+                isSwiping = true;
             }
         }, { passive: true });
 
-        // Double tap = sleep/wake
-        let lastTap = 0;
+        document.addEventListener('touchmove', e => {
+            if (!isSwiping || e.touches.length !== 1) return;
+            const dx = e.touches[0].clientX - swipeStartX;
+            const dy = e.touches[0].clientY - swipeStartY;
+            // Cancel swipe if moved too far vertically+horizontally (prevents accidental triggers during eye tracking)
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                // Still tracking, don't cancel yet
+            }
+        }, { passive: true });
+
         document.addEventListener('touchend', e => {
-            const now = Date.now();
-            if (now - lastTap < 300) {
+            if (!isSwiping) return;
+            isSwiping = false;
+
+            const t = e.changedTouches[0];
+            const dx = t.clientX - swipeStartX;
+            const dy = t.clientY - swipeStartY;
+            const dt = Date.now() - swipeStartTime;
+
+            // Check if touch ended on an eye (don't process as swipe)
+            const target = document.elementFromPoint(t.clientX, t.clientY);
+            if (target && (target.closest('.led-eye'))) return;
+
+            if (dt < 500 && (Math.abs(dx) > 40 || Math.abs(dy) > 40)) {
                 ensureAudio();
                 updateInteract();
-                vibrate(20);
-                if (currentExpr === 'sleepy') {
-                    sounds.boot();
-                    setExpression('surprised');
-                    setTimeout(() => setExpression('normal'), 600);
+
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    // Horizontal swipe
+                    if (dx > 0) {
+                        // Swipe right = next expression
+                        exprIndex = (exprIndex + 1) % exprKeys.length;
+                    } else {
+                        // Swipe left = previous expression
+                        exprIndex = (exprIndex - 1 + exprKeys.length) % exprKeys.length;
+                    }
+                    sounds.swoosh();
+                    vibrate(5);
+                    setExpression(exprKeys[exprIndex]);
                 } else {
-                    setExpression('sleepy');
+                    // Vertical swipe
+                    if (dy < 0) {
+                        // Swipe up = happy
+                        sounds.happy();
+                        vibrate([5, 10, 5]);
+                        setExpression('happy');
+                        setTimeout(() => { if (currentExpr === 'happy') setExpression('normal', false); }, 2000);
+                    } else {
+                        // Swipe down = sad
+                        sounds.sad();
+                        vibrate([8, 15, 8]);
+                        setExpression('sad');
+                        setTimeout(() => { if (currentExpr === 'sad') setExpression('normal', false); }, 2000);
+                    }
                 }
             }
-            lastTap = now;
         }, { passive: true });
 
-        // ===== SHAKE - IMPROVED =====
+        // ===== DOUBLE TAP TO SLEEP/WAKE =====
+        let lastTapTime = 0;
+        let tapCount = 0;
+        let doubleTapTimer = null;
+
+        document.addEventListener('touchend', e => {
+            const now = Date.now();
+            const dt = now - lastTapTime;
+            lastTapTime = now;
+
+            // Only count taps outside the eyes area as double-tap for sleep
+            const target = e.target;
+            if (target && (target.closest('.led-eye'))) return;
+
+            if (dt < 300) {
+                tapCount++;
+                if (tapCount >= 1) {
+                    // Double tap detected
+                    clearTimeout(doubleTapTimer);
+                    tapCount = 0;
+                    ensureAudio();
+                    updateInteract();
+                    vibrate(15);
+
+                    if (currentExpr === 'sleepy') {
+                        sounds.boot();
+                        setExpression('surprised');
+                        setTimeout(() => setExpression('normal'), 600);
+                    } else {
+                        setExpression('sleepy');
+                    }
+                }
+            } else {
+                tapCount = 0;
+                doubleTapTimer = setTimeout(() => { tapCount = 0; }, 350);
+            }
+        }, { passive: true });
+
+        // ===== SHAKE DETECTION =====
         let lastAccX = 0, lastAccY = 0, lastAccZ = 0;
         let shakeCooldown = false;
         let shakeCount = 0;
@@ -712,10 +1036,8 @@
 
                 const delta = Math.abs(acc.x - lastAccX) + Math.abs(acc.y - lastAccY) + Math.abs(acc.z - lastAccZ);
 
-                // Lower threshold for better detection
-                if (delta > 8 && !shakeCooldown) {
+                if (delta > 10 && !shakeCooldown) {
                     shakeCount++;
-                    // Need 2 consecutive shakes to trigger
                     if (shakeCount >= 2) {
                         shakeCooldown = true;
                         shakeCount = 0;
@@ -736,60 +1058,123 @@
             }, { passive: true });
         }
 
-        // Device orientation
+        // ===== DEVICE ORIENTATION =====
         if (window.DeviceOrientationEvent) {
+            let lastTilt = 0;
             window.addEventListener('deviceorientation', e => {
                 if (currentExpr === 'sleepy') return;
-                if (e.beta > 60 && Date.now() - lastInteract > 2000) {
+                if (Date.now() - lastInteract < 2000) return;
+
+                const beta = e.beta || 0; // front/back tilt
+                const gamma = e.gamma || 0; // left/right tilt
+
+                // Tilt forward (looking down) = sad
+                if (beta > 55 && lastTilt <= 55) {
                     setExpression('sad', false);
                     setTimeout(() => { if (currentExpr === 'sad') setExpression('normal', false); }, 2500);
                 }
-                if (e.beta < -25 && Date.now() - lastInteract > 2000) {
+                // Tilt back (looking up) = happy
+                if (beta < -20 && lastTilt >= -20) {
                     setExpression('happy', false);
                     setTimeout(() => { if (currentExpr === 'happy') setExpression('normal', false); }, 2500);
                 }
+                // Tilt left/right rapidly = dizzy
+                if (Math.abs(gamma) > 35 && Math.abs(lastTilt) <= 35) {
+                    setExpression('dizzy', false);
+                    setTimeout(() => { if (currentExpr === 'dizzy') setExpression('normal', false); }, 2000);
+                }
+
+                lastTilt = Math.abs(gamma) > 35 ? gamma : beta;
             }, { passive: true });
         }
 
-        // Keyboard
+        // ===== KEYBOARD =====
         document.addEventListener('keydown', e => {
             ensureAudio();
             updateInteract();
             if (e.key === 'ArrowRight') { exprIndex = (exprIndex + 1) % exprKeys.length; setExpression(exprKeys[exprIndex]); }
             else if (e.key === 'ArrowLeft') { exprIndex = (exprIndex - 1 + exprKeys.length) % exprKeys.length; setExpression(exprKeys[exprIndex]); }
-            else if (e.key === ' ') { blink(); vibrate(4); }
-            else if (e.key === 'w') { wink('left'); }
-            else if (e.key === 'e') { wink('right'); }
-            else if (e.key === 's') { setExpression('sleepy'); }
-            else if (e.key === 'f') { goFullscreen(); requestWakeLock(); }
+            else if (e.key === 'ArrowUp') { setExpression('happy'); setTimeout(() => setExpression('normal', false), 2000); }
+            else if (e.key === 'ArrowDown') { setExpression('sad'); setTimeout(() => setExpression('normal', false), 2000); }
+            else if (e.key === ' ') { blink(); vibrate(3); }
+            else if (e.key === 'w' || e.key === 'W') { wink('left'); }
+            else if (e.key === 'e' || e.key === 'E') { wink('right'); }
+            else if (e.key === 's' || e.key === 'S') { setExpression('sleepy'); }
+            else if (e.key === 'f' || e.key === 'F') { goFullscreen(); requestWakeLock(); }
+            else if (e.key >= '1' && e.key <= '9') {
+                const idx = parseInt(e.key) - 1;
+                if (idx < exprKeys.length) setExpression(exprKeys[idx]);
+            }
         });
 
-        // Random twitch
+        // ===== RANDOM TWITCH =====
         function randomTwitch() {
-            if (Math.random() > 0.6 && currentExpr === 'normal' && Date.now() - lastInteract > 3000) {
+            if (Math.random() > 0.65 && currentExpr === 'normal' && Date.now() - lastInteract > 4000) {
                 const eye = document.getElementById('eye-' + (Math.random() > 0.5 ? 'left' : 'right'));
-                eye.classList.add('twitch');
-                setTimeout(() => eye.classList.remove('twitch'), 300);
+                if (eye) {
+                    eye.classList.add('twitch');
+                    setTimeout(() => eye.classList.remove('twitch'), 300);
+                }
             }
-            setTimeout(randomTwitch, 3000 + Math.random() * 6000);
+            setTimeout(randomTwitch, 4000 + Math.random() * 7000);
         }
 
-        // Hint auto-hide
-        setTimeout(() => { document.getElementById('hint').classList.add('hidden'); }, 8000);
+        // ===== HINT AUTO-HIDE =====
+        setTimeout(() => {
+            const hint = document.getElementById('hint');
+            if (hint) hint.classList.add('hidden');
+        }, 10000);
 
-        // Hide audio hint on first interaction
+        // ===== HIDE AUDIO HINT =====
         function hideAudioHint() {
-            document.getElementById('audio-hint').classList.add('hidden');
+            const el = document.getElementById('audio-hint');
+            if (el) el.classList.add('hidden');
         }
         document.addEventListener('touchstart', hideAudioHint, { once: true });
         document.addEventListener('click', hideAudioHint, { once: true });
 
+        // ===== BOOT SEQUENCE =====
+        function bootSequence() {
+            sounds.boot();
+            setTimeout(() => {
+                const overlay = document.getElementById('boot-overlay');
+                if (overlay) overlay.classList.add('hidden');
+                setTimeout(() => {
+                    if (overlay) overlay.style.display = 'none';
+                }, 1000);
+            }, 1800);
+        }
+
         // ===== INIT =====
-        setExpression('normal', false);
-        setTimeout(blink, 2000);
-        setTimeout(randomTwitch, 3000);
-        setTimeout(idleBehavior, 5000);
-        scheduleRandomExpression();
+        function init() {
+            setExpression('normal', false);
+            bootSequence();
+            setTimeout(scheduleBlink, 2500);
+            setTimeout(randomTwitch, 4000);
+            setTimeout(scheduleIdle, 6000);
+            scheduleRandomExpression();
+            requestWakeLock();
+        }
+
+        // Start when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // Also init on first interaction (audio unlock)
+        let inited = false;
+        function firstInteraction() {
+            if (inited) return;
+            inited = true;
+            ensureAudio();
+            hideAudioHint();
+        }
+        document.addEventListener('touchstart', firstInteraction, { once: true });
+        document.addEventListener('click', firstInteraction, { once: true });
+
+    })();
     </script>
 </body>
 </html>
