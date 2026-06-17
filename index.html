@@ -30,132 +30,25 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
-        /* ===== FULLSCREEN REACTION OVERLAY ===== */
-        .reaction-overlay {
+        /* Audio unlock hint */
+        .audio-hint {
             position: fixed;
-            inset: 0;
-            z-index: 200;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-
-        .reaction-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .reaction-shock {
-            background: radial-gradient(circle, rgba(255,50,50,0.12), rgba(10,0,0,0.95));
-        }
-        .reaction-shock .reaction-emoji {
-            font-size: 100px;
-            animation: shock-bounce 0.6s ease-in-out infinite alternate;
-            text-shadow: 0 0 50px rgba(255,50,50,0.7);
-        }
-        @keyframes shock-bounce {
-            0% { transform: scale(1) rotate(-3deg); }
-            100% { transform: scale(1.12) rotate(3deg); }
-        }
-
-        .reaction-celebrate {
-            background: radial-gradient(circle, rgba(255,200,50,0.08), rgba(10,10,0,0.95));
-        }
-        .reaction-celebrate .reaction-emoji {
-            font-size: 90px;
-            animation: celebrate-wiggle 0.8s ease-in-out infinite;
-            text-shadow: 0 0 40px rgba(255,200,50,0.6);
-        }
-        @keyframes celebrate-wiggle {
-            0%, 100% { transform: rotate(-8deg) scale(1); }
-            50% { transform: rotate(8deg) scale(1.08); }
-        }
-
-        .reaction-love {
-            background: radial-gradient(circle, rgba(255,50,150,0.08), rgba(15,0,8,0.95));
-        }
-        .reaction-love .reaction-emoji {
-            font-size: 90px;
-            animation: love-pulse 0.9s ease-in-out infinite;
-            text-shadow: 0 0 40px rgba(255,50,150,0.6);
-        }
-        @keyframes love-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        .reaction-scared {
-            background: radial-gradient(circle, rgba(100,0,200,0.1), rgba(8,0,15,0.95));
-        }
-        .reaction-scared .reaction-emoji {
-            font-size: 95px;
-            animation: scared-shake 0.25s ease-in-out infinite;
-            text-shadow: 0 0 40px rgba(150,0,255,0.5);
-        }
-        @keyframes scared-shake {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(-4px, 2px); }
-            50% { transform: translate(4px, -2px); }
-            75% { transform: translate(-2px, -3px); }
-        }
-
-        .reaction-sleep {
-            background: radial-gradient(circle, rgba(50,80,150,0.1), rgba(0,0,15,0.95));
-        }
-        .reaction-sleep .reaction-emoji {
-            font-size: 80px;
-            animation: sleep-float 2.5s ease-in-out infinite;
-            text-shadow: 0 0 30px rgba(100,150,255,0.5);
-        }
-        @keyframes sleep-float {
-            0%, 100% { transform: translateY(0); opacity: 0.7; }
-            50% { transform: translateY(-15px); opacity: 1; }
-        }
-
-        .zzz {
-            position: absolute;
-            font-size: 35px;
-            color: rgba(150,180,255,0.5);
-            text-shadow: 0 0 15px rgba(150,180,255,0.3);
-            animation: zzz-up 3s ease-out infinite;
-            pointer-events: none;
-        }
-        .zzz:nth-child(1) { left: 25%; top: 35%; animation-delay: 0s; font-size: 28px; }
-        .zzz:nth-child(2) { left: 65%; top: 30%; animation-delay: 1s; font-size: 32px; }
-        .zzz:nth-child(3) { left: 45%; top: 25%; animation-delay: 2s; font-size: 24px; }
-        @keyframes zzz-up {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            15% { opacity: 0.8; }
-            100% { transform: translateY(-70px) translateX(25px); opacity: 0; }
-        }
-
-        .reaction-text {
-            margin-top: 25px;
-            font-size: 16px;
-            letter-spacing: 5px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(0, 229, 255, 0.3);
+            font-size: 14px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            text-shadow: 0 0 15px rgba(255,255,255,0.15);
-        }
-
-        /* Confetti */
-        #confetti-canvas {
-            position: fixed;
-            inset: 0;
+            z-index: 500;
             pointer-events: none;
-            z-index: 201;
-            display: none;
+            transition: opacity 0.5s;
         }
+        .audio-hint.hidden { opacity: 0; }
 
-        /* Scanlines & vignette */
         .scanlines {
             position: fixed; inset: 0;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px);
-            pointer-events: none; z-index: 100; opacity: 0.18;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
+            pointer-events: none; z-index: 100; opacity: 0.15;
         }
         .vignette {
             position: fixed; inset: 0;
@@ -167,12 +60,11 @@
             transform: translate(-50%, -50%);
             width: 300px; height: 200px;
             border-radius: 50%;
-            background: radial-gradient(ellipse, rgba(0,200,255,0.025), transparent 70%);
+            background: radial-gradient(ellipse, rgba(0,200,255,0.02), transparent 70%);
             pointer-events: none; z-index: 1;
-            transition: background 0.5s ease;
+            transition: background 0.8s ease;
         }
 
-        /* Face */
         .face-container {
             display: flex; align-items: center;
             gap: clamp(12px, 4vw, 22px);
@@ -191,49 +83,53 @@
             position: absolute; width: 100%; height: 100%;
             border-radius: 50%;
             background: radial-gradient(circle at 35% 35%, #151520, #08080e);
-            box-shadow: 0 0 50px rgba(0,200,255,0.025), inset 0 0 30px rgba(0,0,0,0.95), 0 0 0 1px rgba(0,200,255,0.03);
+            box-shadow: 0 0 50px rgba(0,200,255,0.02), inset 0 0 30px rgba(0,0,0,0.95), 0 0 0 1px rgba(0,200,255,0.025);
             display: flex; justify-content: center; align-items: center;
+            transition: transform 0.15s ease;
+        }
+        .led-eye:active .eye-housing {
+            transform: scale(0.95);
         }
         .led-screen {
             width: 72%; height: 72%; border-radius: 50%;
             background: #06060a; position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 0 8px rgba(0,200,255,0.02);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 0 8px rgba(0,200,255,0.015);
         }
         .led-grid {
             position: absolute; inset: 0;
             background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 6px, rgba(0,200,255,0.01) 6px, rgba(0,200,255,0.01) 7px),
-                repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0,200,255,0.01) 6px, rgba(0,200,255,0.01) 7px);
+                repeating-linear-gradient(0deg, transparent, transparent 6px, rgba(0,200,255,0.008) 6px, rgba(0,200,255,0.008) 7px),
+                repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0,200,255,0.008) 6px, rgba(0,200,255,0.008) 7px);
             pointer-events: none;
         }
         .led-shape {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .led-dot {
             width: 16px; height: 16px; border-radius: 50%;
             background: #00e5ff;
-            box-shadow: 0 0 10px rgba(0,229,255,0.6), 0 0 25px rgba(0,229,255,0.3), inset 0 0 4px rgba(255,255,255,0.3);
+            box-shadow: 0 0 10px rgba(0,229,255,0.5), 0 0 25px rgba(0,229,255,0.25), inset 0 0 4px rgba(255,255,255,0.3);
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            transition: all 0.18s ease-out;
+            transition: all 0.2s ease-out;
         }
         .led-bar {
             width: 42px; height: 5px; border-radius: 2.5px;
             background: #00e5ff;
-            box-shadow: 0 0 8px rgba(0,229,255,0.5), 0 0 20px rgba(0,229,255,0.2), inset 0 0 3px rgba(255,255,255,0.2);
+            box-shadow: 0 0 8px rgba(0,229,255,0.4), 0 0 20px rgba(0,229,255,0.18), inset 0 0 3px rgba(255,255,255,0.2);
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .led-ring {
             position: absolute; inset: 10%;
             border-radius: 50%;
-            border: 1.5px solid rgba(0,229,255,0.05);
+            border: 1.5px solid rgba(0,229,255,0.04);
             pointer-events: none;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
         }
 
         /* EXPRESSIONS */
@@ -241,134 +137,117 @@
         .led-shape.normal .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
         .led-shape.happy .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .led-shape.happy .led-bar { opacity: 1; width: 38px; height: 9px; border-radius: 0 0 19px 19px; background: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.5), 0 0 25px rgba(0,255,136,0.25), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 5px)); }
+        .led-shape.happy .led-bar { opacity: 1; width: 38px; height: 9px; border-radius: 0 0 19px 19px; background: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.45), 0 0 25px rgba(0,255,136,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 5px)); }
 
         .led-shape.sad .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .led-shape.sad .led-bar { opacity: 1; width: 34px; height: 9px; border-radius: 17px 17px 0 0; background: #4488ff; box-shadow: 0 0 10px rgba(68,136,255,0.5), 0 0 25px rgba(68,136,255,0.25), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% - 5px)); }
+        .led-shape.sad .led-bar { opacity: 1; width: 34px; height: 9px; border-radius: 17px 17px 0 0; background: #4488ff; box-shadow: 0 0 10px rgba(68,136,255,0.45), 0 0 25px rgba(68,136,255,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% - 5px)); }
 
-        .led-shape.angry .led-dot { opacity: 1; width: 10px; height: 10px; background: #ff3344; box-shadow: 0 0 10px rgba(255,51,68,0.6), 0 0 25px rgba(255,51,68,0.3), inset 0 0 3px rgba(255,255,255,0.2); transform: translate(-50%, -50%); }
-        .led-shape.angry .led-bar { opacity: 1; width: 40px; height: 3px; border-radius: 1.5px; background: #ff3344; box-shadow: 0 0 8px rgba(255,51,68,0.5), 0 0 20px rgba(255,51,68,0.2), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, calc(-50% - 10px)); }
+        .led-shape.angry .led-dot { opacity: 1; width: 10px; height: 10px; background: #ff3344; box-shadow: 0 0 10px rgba(255,51,68,0.55), 0 0 25px rgba(255,51,68,0.28), inset 0 0 3px rgba(255,255,255,0.2); transform: translate(-50%, -50%); }
+        .led-shape.angry .led-bar { opacity: 1; width: 40px; height: 3px; border-radius: 1.5px; background: #ff3344; box-shadow: 0 0 8px rgba(255,51,68,0.45), 0 0 20px rgba(255,51,68,0.2), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, calc(-50% - 10px)); }
 
-        .led-shape.surprised .led-dot { opacity: 1; width: 30px; height: 30px; background: #00ccff; box-shadow: 0 0 15px rgba(0,204,255,0.6), 0 0 40px rgba(0,204,255,0.3), inset 0 0 6px rgba(255,255,255,0.3); transform: translate(-50%, -50%); }
+        .led-shape.surprised .led-dot { opacity: 1; width: 30px; height: 30px; background: #00ccff; box-shadow: 0 0 15px rgba(0,204,255,0.55), 0 0 40px rgba(0,204,255,0.28), inset 0 0 6px rgba(255,255,255,0.3); transform: translate(-50%, -50%); }
         .led-shape.surprised .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
-        .led-shape.love .led-dot { opacity: 1; width: 12px; height: 12px; background: #ff66aa; box-shadow: 0 0 10px rgba(255,102,170,0.6), 0 0 25px rgba(255,102,170,0.3), inset 0 0 3px rgba(255,255,255,0.2); transform: translate(-50%, -50%); }
-        .led-shape.love .led-bar { opacity: 1; width: 32px; height: 14px; border-radius: 0 0 16px 16px; background: #ff66aa; box-shadow: 0 0 10px rgba(255,102,170,0.5), 0 0 25px rgba(255,102,170,0.25), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 3px)); }
+        .led-shape.love .led-dot { opacity: 1; width: 12px; height: 12px; background: #ff66aa; box-shadow: 0 0 10px rgba(255,102,170,0.55), 0 0 25px rgba(255,102,170,0.28), inset 0 0 3px rgba(255,255,255,0.2); transform: translate(-50%, -50%); }
+        .led-shape.love .led-bar { opacity: 1; width: 32px; height: 14px; border-radius: 0 0 16px 16px; background: #ff66aa; box-shadow: 0 0 10px rgba(255,102,170,0.45), 0 0 25px rgba(255,102,170,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 3px)); }
 
-        .led-shape.sleepy .led-dot { opacity: 0.2; width: 8px; height: 8px; background: #557799; box-shadow: 0 0 4px rgba(85,119,153,0.25), 0 0 10px rgba(85,119,153,0.08); transform: translate(-50%, -50%); }
+        .led-shape.sleepy .led-dot { opacity: 0.18; width: 8px; height: 8px; background: #557799; box-shadow: 0 0 4px rgba(85,119,153,0.2), 0 0 10px rgba(85,119,153,0.06); transform: translate(-50%, -50%); }
         .led-shape.sleepy .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
         .led-shape.squint .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .led-shape.squint .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #ffaa00; box-shadow: 0 0 8px rgba(255,170,0,0.5), 0 0 20px rgba(255,170,0,0.2), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
+        .led-shape.squint .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #ffaa00; box-shadow: 0 0 8px rgba(255,170,0,0.45), 0 0 20px rgba(255,170,0,0.2), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
 
-        .led-shape.thinking .led-dot { opacity: 1; width: 10px; height: 10px; background: #aa88ff; box-shadow: 0 0 8px rgba(170,136,255,0.5), 0 0 20px rgba(170,136,255,0.25), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(calc(-50% + 10px), calc(-50% - 8px)); }
-        .led-shape.thinking .led-bar { opacity: 1; width: 22px; height: 4px; border-radius: 2px; background: #aa88ff; box-shadow: 0 0 6px rgba(170,136,255,0.4), 0 0 15px rgba(170,136,255,0.18), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(calc(-50% - 5px), calc(-50% + 10px)) rotate(-12deg); }
+        .led-shape.thinking .led-dot { opacity: 1; width: 10px; height: 10px; background: #aa88ff; box-shadow: 0 0 8px rgba(170,136,255,0.45), 0 0 20px rgba(170,136,255,0.22), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(calc(-50% + 10px), calc(-50% - 8px)); }
+        .led-shape.thinking .led-bar { opacity: 1; width: 22px; height: 4px; border-radius: 2px; background: #aa88ff; box-shadow: 0 0 6px rgba(170,136,255,0.35), 0 0 15px rgba(170,136,255,0.15), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(calc(-50% - 5px), calc(-50% + 10px)) rotate(-12deg); }
 
-        .led-shape.confused .led-dot { opacity: 1; width: 8px; height: 8px; background: #ff8844; box-shadow: 0 0 8px rgba(255,136,68,0.5), 0 0 20px rgba(255,136,68,0.25), inset 0 0 2px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
-        .led-shape.confused .led-bar { opacity: 1; width: 34px; height: 4px; border-radius: 2px; background: #ff8844; box-shadow: 0 0 6px rgba(255,136,68,0.4), 0 0 15px rgba(255,136,68,0.18), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, -50%) rotate(18deg); }
+        .led-shape.confused .led-dot { opacity: 1; width: 8px; height: 8px; background: #ff8844; box-shadow: 0 0 8px rgba(255,136,68,0.45), 0 0 20px rgba(255,136,68,0.22), inset 0 0 2px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
+        .led-shape.confused .led-bar { opacity: 1; width: 34px; height: 4px; border-radius: 2px; background: #ff8844; box-shadow: 0 0 6px rgba(255,136,68,0.35), 0 0 15px rgba(255,136,68,0.15), inset 0 0 3px rgba(255,255,255,0.15); transform: translate(-50%, -50%) rotate(18deg); }
 
-        .led-shape.neutral .led-dot { opacity: 1; width: 6px; height: 6px; background: #88aabb; box-shadow: 0 0 5px rgba(136,170,187,0.35), 0 0 12px rgba(136,170,187,0.12); transform: translate(calc(-50% - 10px), calc(-50% - 2px)); }
-        .led-shape.neutral .led-bar { opacity: 1; width: 28px; height: 3px; border-radius: 1.5px; background: #88aabb; box-shadow: 0 0 5px rgba(136,170,187,0.35), 0 0 12px rgba(136,170,187,0.12), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(calc(-50% + 6px), calc(-50% - 2px)); }
+        .led-shape.neutral .led-dot { opacity: 1; width: 6px; height: 6px; background: #88aabb; box-shadow: 0 0 5px rgba(136,170,187,0.3), 0 0 12px rgba(136,170,187,0.1); transform: translate(calc(-50% - 10px), calc(-50% - 2px)); }
+        .led-shape.neutral .led-bar { opacity: 1; width: 28px; height: 3px; border-radius: 1.5px; background: #88aabb; box-shadow: 0 0 5px rgba(136,170,187,0.3), 0 0 12px rgba(136,170,187,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(calc(-50% + 6px), calc(-50% - 2px)); }
 
-        .led-shape.shock .led-dot { opacity: 1; width: 22px; height: 22px; background: #ffffff; box-shadow: 0 0 12px rgba(255,255,255,0.5), 0 0 30px rgba(255,255,255,0.2), inset 0 0 5px rgba(200,240,255,0.3); transform: translate(-50%, -50%); }
+        .led-shape.shock .led-dot { opacity: 1; width: 22px; height: 22px; background: #ffffff; box-shadow: 0 0 12px rgba(255,255,255,0.45), 0 0 30px rgba(255,255,255,0.18), inset 0 0 5px rgba(200,240,255,0.3); transform: translate(-50%, -50%); }
         .led-shape.shock .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
 
-        .led-shape.excited .led-dot { opacity: 1; width: 14px; height: 14px; background: #ffdd00; box-shadow: 0 0 12px rgba(255,221,0,0.6), 0 0 30px rgba(255,221,0,0.3), inset 0 0 4px rgba(255,255,255,0.3); transform: translate(-50%, -50%); }
-        .led-shape.excited .led-bar { opacity: 1; width: 42px; height: 10px; border-radius: 0 0 21px 21px; background: #ffdd00; box-shadow: 0 0 10px rgba(255,221,0,0.5), 0 0 25px rgba(255,221,0,0.25), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 6px)); }
+        .led-shape.excited .led-dot { opacity: 1; width: 14px; height: 14px; background: #ffdd00; box-shadow: 0 0 12px rgba(255,221,0,0.55), 0 0 30px rgba(255,221,0,0.28), inset 0 0 4px rgba(255,255,255,0.3); transform: translate(-50%, -50%); }
+        .led-shape.excited .led-bar { opacity: 1; width: 42px; height: 10px; border-radius: 0 0 21px 21px; background: #ffdd00; box-shadow: 0 0 10px rgba(255,221,0,0.45), 0 0 25px rgba(255,221,0,0.22), inset 0 0 4px rgba(255,255,255,0.2); transform: translate(-50%, calc(-50% + 6px)); }
 
-        .led-shape.worried .led-dot { opacity: 1; width: 8px; height: 8px; background: #cc88ff; box-shadow: 0 0 6px rgba(204,136,255,0.45), 0 0 15px rgba(204,136,255,0.18); transform: translate(-50%, calc(-50% + 4px)); }
-        .led-shape.worried .led-bar { opacity: 1; width: 32px; height: 3px; border-radius: 1.5px; background: #cc88ff; box-shadow: 0 0 5px rgba(204,136,255,0.35), 0 0 12px rgba(204,136,255,0.12), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, calc(-50% - 8px)) rotate(-5deg); }
+        .led-shape.worried .led-dot { opacity: 1; width: 8px; height: 8px; background: #cc88ff; box-shadow: 0 0 6px rgba(204,136,255,0.4), 0 0 15px rgba(204,136,255,0.15); transform: translate(-50%, calc(-50% + 4px)); }
+        .led-shape.worried .led-bar { opacity: 1; width: 32px; height: 3px; border-radius: 1.5px; background: #cc88ff; box-shadow: 0 0 5px rgba(204,136,255,0.3), 0 0 12px rgba(204,136,255,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, calc(-50% - 8px)) rotate(-5deg); }
 
         .led-shape.blink .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .led-shape.blink .led-bar { opacity: 1; width: 46px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 6px rgba(0,229,255,0.4), 0 0 15px rgba(0,229,255,0.15), inset 0 0 2px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
+        .led-shape.blink .led-bar { opacity: 1; width: 46px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 6px rgba(0,229,255,0.35), 0 0 15px rgba(0,229,255,0.12), inset 0 0 2px rgba(255,255,255,0.15); transform: translate(-50%, -50%); }
 
         .led-shape.wink .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .led-shape.wink .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 5px rgba(0,229,255,0.35), 0 0 12px rgba(0,229,255,0.12), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, -50%); }
+        .led-shape.wink .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 5px rgba(0,229,255,0.3), 0 0 12px rgba(0,229,255,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, -50%); }
+
+        .led-shape.shy .led-dot { opacity: 1; width: 10px; height: 10px; background: #ff88aa; box-shadow: 0 0 8px rgba(255,136,170,0.5), 0 0 20px rgba(255,136,170,0.25); transform: translate(calc(-50% - 6px), calc(-50% + 2px)); }
+        .led-shape.shy .led-bar { opacity: 1; width: 24px; height: 4px; border-radius: 2px; background: #ff88aa; box-shadow: 0 0 5px rgba(255,136,170,0.4), 0 0 12px rgba(255,136,170,0.15); transform: translate(calc(-50% + 8px), calc(-50% + 2px)); }
+
+        .led-shape.curious .led-dot { opacity: 1; width: 12px; height: 12px; background: #66ddff; box-shadow: 0 0 8px rgba(102,221,255,0.5), 0 0 20px rgba(102,221,255,0.25); transform: translate(calc(-50% + 5px), calc(-50% - 2px)); }
+        .led-shape.curious .led-bar { opacity: 1; width: 20px; height: 3px; border-radius: 1.5px; background: #66ddff; box-shadow: 0 0 5px rgba(102,221,255,0.4), 0 0 12px rgba(102,221,255,0.15); transform: translate(calc(-50% - 6px), calc(-50% + 6px)) rotate(8deg); }
+
+        .led-shape.content .led-dot { opacity: 1; width: 10px; height: 10px; background: #88ffaa; box-shadow: 0 0 8px rgba(136,255,170,0.45), 0 0 20px rgba(136,255,170,0.2); transform: translate(-50%, -50%); }
+        .led-shape.content .led-bar { opacity: 1; width: 36px; height: 7px; border-radius: 0 0 18px 18px; background: #88ffaa; box-shadow: 0 0 8px rgba(136,255,170,0.4), 0 0 18px rgba(136,255,170,0.18); transform: translate(-50%, calc(-50% + 4px)); }
 
         /* MOUTH */
         .mouth {
             position: absolute; bottom: clamp(-50px, -12vw, -40px);
             left: 50%; transform: translateX(-50%);
             width: 22px; height: 4px; border-radius: 2px;
-            background: rgba(0,229,255,0.1);
-            box-shadow: 0 0 8px rgba(0,229,255,0.06);
-            transition: all 0.3s ease;
+            background: rgba(0,229,255,0.08);
+            box-shadow: 0 0 8px rgba(0,229,255,0.05);
+            transition: all 0.4s ease;
         }
-        .mouth.smile { width: 30px; height: 10px; border-radius: 0 0 15px 15px; background: rgba(0,255,136,0.08); border-bottom: 2px solid rgba(0,255,136,0.18); box-shadow: 0 0 10px rgba(0,255,136,0.06); }
-        .mouth.frown { width: 26px; height: 8px; border-radius: 13px 13px 0 0; background: rgba(68,136,255,0.06); border-top: 2px solid rgba(68,136,255,0.15); box-shadow: 0 0 8px rgba(68,136,255,0.04); }
-        .mouth.o { width: 12px; height: 18px; border-radius: 50%; background: rgba(0,204,255,0.08); border: 2px solid rgba(0,204,255,0.15); box-shadow: 0 0 10px rgba(0,204,255,0.04); }
-        .mouth.line { width: 18px; height: 2px; border-radius: 1px; background: rgba(255,51,68,0.18); box-shadow: 0 0 6px rgba(255,51,68,0.04); }
-        .mouth.grin { width: 34px; height: 12px; border-radius: 0 0 17px 17px; background: rgba(0,255,136,0.05); border-bottom: 2px solid rgba(0,255,136,0.15); }
-        .mouth.neutral { width: 20px; height: 2px; border-radius: 1px; background: rgba(136,170,187,0.12); }
+        .mouth.smile { width: 30px; height: 10px; border-radius: 0 0 15px 15px; background: rgba(0,255,136,0.07); border-bottom: 2px solid rgba(0,255,136,0.15); box-shadow: 0 0 10px rgba(0,255,136,0.05); }
+        .mouth.frown { width: 26px; height: 8px; border-radius: 13px 13px 0 0; background: rgba(68,136,255,0.05); border-top: 2px solid rgba(68,136,255,0.12); box-shadow: 0 0 8px rgba(68,136,255,0.03); }
+        .mouth.o { width: 12px; height: 18px; border-radius: 50%; background: rgba(0,204,255,0.07); border: 2px solid rgba(0,204,255,0.12); box-shadow: 0 0 10px rgba(0,204,255,0.03); }
+        .mouth.line { width: 18px; height: 2px; border-radius: 1px; background: rgba(255,51,68,0.15); box-shadow: 0 0 6px rgba(255,51,68,0.03); }
+        .mouth.grin { width: 34px; height: 12px; border-radius: 0 0 17px 17px; background: rgba(0,255,136,0.04); border-bottom: 2px solid rgba(0,255,136,0.12); }
+        .mouth.neutral { width: 20px; height: 2px; border-radius: 1px; background: rgba(136,170,187,0.1); }
+        .mouth.shy { width: 16px; height: 8px; border-radius: 0 0 8px 8px; background: rgba(255,136,170,0.06); border-bottom: 2px solid rgba(255,136,170,0.12); }
+        .mouth.curious { width: 14px; height: 3px; border-radius: 1.5px; background: rgba(102,221,255,0.1); transform: translateX(-50%) rotate(-5deg); }
+        .mouth.content { width: 28px; height: 6px; border-radius: 0 0 14px 14px; background: rgba(136,255,170,0.06); border-bottom: 2px solid rgba(136,255,170,0.1); }
 
         /* STATUS */
         .status {
-            position: fixed; top: clamp(30px, 8vh, 50px); left: 50%;
+            position: fixed; top: clamp(25px, 7vh, 45px); left: 50%;
             transform: translateX(-50%);
-            color: rgba(0,229,255,0.15); font-size: 10px;
-            letter-spacing: 4px; text-transform: uppercase;
-            z-index: 10; transition: opacity 0.3s;
+            color: rgba(0,229,255,0.12); font-size: 9px;
+            letter-spacing: 3px; text-transform: uppercase;
+            z-index: 10; transition: opacity 0.5s;
         }
-        .status.hidden { opacity: 0; }
 
-        /* HINT - auto hide */
+        /* HINT */
         .hint {
-            position: fixed; bottom: clamp(30px, 8vh, 50px); left: 50%;
+            position: fixed; bottom: clamp(25px, 7vh, 45px); left: 50%;
             transform: translateX(-50%);
-            color: rgba(0,229,255,0.1); font-size: 9px;
-            letter-spacing: 1.5px; text-align: center;
+            color: rgba(0,229,255,0.08); font-size: 8px;
+            letter-spacing: 1px; text-align: center;
             z-index: 10; line-height: 2;
-            transition: opacity 0.5s;
+            transition: opacity 0.6s;
         }
         .hint.hidden { opacity: 0; pointer-events: none; }
 
         .corner {
-            position: fixed; width: 25px; height: 25px;
-            border-color: rgba(0,229,255,0.06); border-style: solid;
+            position: fixed; width: 20px; height: 20px;
+            border-color: rgba(0,229,255,0.05); border-style: solid;
             pointer-events: none; z-index: 5;
         }
-        .c-tl { top: 15px; left: 15px; border-width: 1.5px 0 0 1.5px; }
-        .c-tr { top: 15px; right: 15px; border-width: 1.5px 1.5px 0 0; }
-        .c-bl { bottom: 15px; left: 15px; border-width: 0 0 1.5px 1.5px; }
-        .c-br { bottom: 15px; right: 15px; border-width: 0 1.5px 1.5px 0; }
+        .c-tl { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+        .c-tr { top: 12px; right: 12px; border-width: 1px 1px 0 0; }
+        .c-bl { bottom: 12px; left: 12px; border-width: 0 0 1px 1px; }
+        .c-br { bottom: 12px; right: 12px; border-width: 0 1px 1px 0; }
 
         @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.005); } }
-        .breathing { animation: breathe 5s ease-in-out infinite; }
+        .breathing { animation: breathe 6s ease-in-out infinite; }
 
         @keyframes twitch { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(1px, -1px); } 75% { transform: translate(-1px, 1px); } }
         .twitch { animation: twitch 0.15s ease-in-out 2; }
-
-        @keyframes boot-up { 0% { opacity: 0; transform: scale(0.5); } 60% { opacity: 1; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
-        .booting { animation: boot-up 0.8s ease-out forwards; }
     </style>
 </head>
 <body>
-    <!-- REACTION OVERLAYS -->
-    <div class="reaction-overlay reaction-shock" id="overlay-shock">
-        <div class="reaction-emoji">😱</div>
-        <div class="reaction-text">CHOQUE!</div>
-    </div>
-    <div class="reaction-overlay reaction-celebrate" id="overlay-celebrate">
-        <div class="reaction-emoji">🎉</div>
-        <div class="reaction-text">FESTA!</div>
-    </div>
-    <div class="reaction-overlay reaction-love" id="overlay-love">
-        <div class="reaction-emoji">🥰</div>
-        <div class="reaction-text">AMOR!</div>
-    </div>
-    <div class="reaction-overlay reaction-scared" id="overlay-scared">
-        <div class="reaction-emoji">😰</div>
-        <div class="reaction-text">ASSUSTADO!</div>
-    </div>
-    <div class="reaction-overlay reaction-sleep" id="overlay-sleep">
-        <div class="zzz">Z</div>
-        <div class="zzz">z</div>
-        <div class="zzz">Z</div>
-        <div class="reaction-emoji">😴</div>
-        <div class="reaction-text">SONO</div>
-    </div>
-
-    <canvas id="confetti-canvas"></canvas>
+    <div class="audio-hint" id="audio-hint">toque para iniciar</div>
 
     <div class="scanlines"></div>
     <div class="vignette"></div>
@@ -410,79 +289,97 @@
     </div>
 
     <div class="hint" id="hint">
-        TOQUE NOS OLHOS &middot; DESLIZA PRA MUDAR<br>
-        TOQUE DUPLO = SONO &middot; SHAKE = SURPRESA
+        toque nos olhos &middot; passe o dedo &middot; incline o celular
     </div>
 
     <script>
-        // ===== AUDIO =====
+        // ===== AUDIO ENGINE - always tries to init on every interaction =====
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
         let masterGain = null;
+        let audioUnlocked = false;
 
-        function initAudio() {
+        function ensureAudio() {
             if (!audioCtx) {
-                audioCtx = new AudioCtx();
-                masterGain = audioCtx.createGain();
-                masterGain.gain.value = 0.5;
-                masterGain.connect(audioCtx.destination);
+                try {
+                    audioCtx = new AudioCtx();
+                    masterGain = audioCtx.createGain();
+                    masterGain.gain.value = 0.6;
+                    masterGain.connect(audioCtx.destination);
+                } catch(e) { return false; }
             }
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().then(() => { audioUnlocked = true; });
+            } else {
+                audioUnlocked = true;
+            }
+            return audioUnlocked;
         }
 
-        function playTone(freq, dur, type = 'sine', vol = 0.035) {
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            const filter = audioCtx.createBiquadFilter();
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(masterGain || audioCtx.destination);
-            osc.frequency.value = freq;
-            osc.type = type;
-            filter.type = 'lowpass';
-            filter.frequency.value = 3000;
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
-            osc.start(audioCtx.currentTime);
-            osc.stop(audioCtx.currentTime + dur);
+        function playTone(freq, dur, type, vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(masterGain || audioCtx.destination);
+                osc.frequency.value = freq;
+                osc.type = type || 'sine';
+                filter.type = 'lowpass';
+                filter.frequency.value = 3000;
+                gain.gain.setValueAtTime(vol || 0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + (dur || 0.1));
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + (dur || 0.1));
+            } catch(e) {}
         }
 
-        function playChord(freqs, dur, vol = 0.02) {
-            freqs.forEach((f, i) => setTimeout(() => playTone(f, dur, 'sine', vol), i * 50));
+        function playChord(freqs, dur, vol) {
+            freqs.forEach((f, i) => setTimeout(() => playTone(f, dur, 'sine', vol), i * 70));
         }
 
-        function playBlink() {
-            playTone(900, 0.035, 'sine', 0.018);
-            setTimeout(() => playTone(700, 0.035, 'sine', 0.015), 70);
+        function playSlide(from, to, dur, vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(masterGain || audioCtx.destination);
+                osc.frequency.setValueAtTime(from, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(to, audioCtx.currentTime + dur);
+                gain.gain.setValueAtTime(vol || 0.035, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + dur);
+            } catch(e) {}
         }
 
-        function playBoot() {
-            [200, 300, 400, 500, 600].forEach((f, i) => setTimeout(() => playTone(f, 0.1 + i * 0.02, 'sine', 0.03), i * 100));
-        }
-
-        function playExpressionSound(name) {
-            const sounds = {
-                normal: () => playTone(440, 0.08),
-                happy: () => playChord([523, 659], 0.12, 0.018),
-                sad: () => { playTone(330, 0.15); setTimeout(() => playTone(262, 0.15), 120); },
-                angry: () => playTone(100, 0.2, 'sawtooth', 0.04),
-                surprised: () => { playTone(440, 0.02); setTimeout(() => playTone(880, 0.1), 30); },
-                love: () => playChord([523, 659, 784], 0.15, 0.015),
-                sleepy: () => playTone(150, 0.3, 'sine', 0.012),
-                squint: () => playTone(240, 0.12, 'triangle', 0.025),
-                thinking: () => { playTone(330, 0.08); setTimeout(() => playTone(392, 0.08), 100); },
-                confused: () => { playTone(400, 0.05); setTimeout(() => playTone(340, 0.05), 70); setTimeout(() => playTone(400, 0.06), 140); },
-                neutral: () => playTone(350, 0.06),
-                shock: () => { playTone(600, 0.03); setTimeout(() => playTone(1000, 0.08), 40); },
-                excited: () => playChord([523, 659, 784, 1047], 0.1, 0.018),
-                worried: () => { playTone(392, 0.1); setTimeout(() => playTone(349, 0.12), 100); },
-            };
-            if (sounds[name]) sounds[name]();
-        }
-
-        function playTouch() { playTone(1000 + Math.random() * 250, 0.025, 'sine', 0.012); }
-        function playSwoosh() { playTone(550, 0.1, 'sine', 0.018); }
+        // ===== SOUND LIBRARY =====
+        const sounds = {
+            blink: () => { playTone(800, 0.05, 'sine', 0.03); setTimeout(() => playTone(600, 0.05, 'sine', 0.025), 80); },
+            wink: () => { playTone(700, 0.06, 'sine', 0.035); setTimeout(() => playTone(950, 0.04, 'sine', 0.025), 100); },
+            touch: () => playTone(1300 + Math.random() * 300, 0.05, 'sine', 0.025),
+            pet: () => { playSlide(500, 1000, 0.2, 0.03); setTimeout(() => playSlide(1000, 1400, 0.15, 0.02), 250); },
+            happy: () => playChord([523, 659, 784], 0.25, 0.03),
+            love: () => playChord([523, 659, 784, 1047], 0.3, 0.025),
+            surprised: () => { playTone(400, 0.03); setTimeout(() => playTone(900, 0.12), 50); setTimeout(() => playTone(1400, 0.06), 180); },
+            sad: () => { playTone(330, 0.25); setTimeout(() => playTone(262, 0.22), 250); },
+            angry: () => playTone(80, 0.4, 'sawtooth', 0.045),
+            sleepy: () => playTone(140, 0.5, 'sine', 0.018),
+            squint: () => playTone(220, 0.18, 'triangle', 0.035),
+            confused: () => { playTone(380, 0.08); setTimeout(() => playTone(320, 0.08), 100); setTimeout(() => playTone(380, 0.1), 200); },
+            shock: () => { playTone(300, 0.05); setTimeout(() => playTone(700, 0.08), 60); setTimeout(() => playTone(1200, 0.15), 150); },
+            excited: () => playChord([523, 659, 784, 1047], 0.18, 0.03),
+            worried: () => { playTone(370, 0.15); setTimeout(() => playTone(330, 0.18), 150); },
+            shy: () => { playSlide(900, 500, 0.3, 0.025); setTimeout(() => playSlide(500, 800, 0.2, 0.018), 350); },
+            curious: () => { playTone(500, 0.06); setTimeout(() => playTone(700, 0.1), 120); setTimeout(() => playTone(600, 0.08), 250); },
+            content: () => playChord([440, 554, 659], 0.35, 0.022),
+            boot: () => { [200, 320, 450, 580, 720].forEach((f, i) => setTimeout(() => playTone(f, 0.12 + i * 0.02, 'sine', 0.04), i * 120)); },
+            swoosh: () => playSlide(300, 900, 0.18, 0.03),
+            boop: () => playTone(1800, 0.04, 'sine', 0.02),
+        };
 
         // ===== VIBRATION =====
         function vibrate(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
@@ -503,87 +400,6 @@
             else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
         }
 
-        // ===== CONFETTI =====
-        const confettiCanvas = document.getElementById('confetti-canvas');
-        const ctx = confettiCanvas.getContext('2d');
-        let confettiParticles = [];
-        let confettiActive = false;
-
-        function resizeConfetti() {
-            confettiCanvas.width = window.innerWidth;
-            confettiCanvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeConfetti);
-        resizeConfetti();
-
-        function spawnConfetti() {
-            confettiParticles = [];
-            const colors = ['#00ff88', '#00e5ff', '#ff66aa', '#ffdd00', '#ff3344', '#aa88ff'];
-            for (let i = 0; i < 60; i++) {
-                confettiParticles.push({
-                    x: Math.random() * confettiCanvas.width,
-                    y: -20 - Math.random() * 100,
-                    w: 4 + Math.random() * 5,
-                    h: 4 + Math.random() * 5,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    speed: 2 + Math.random() * 3,
-                    drift: (Math.random() - 0.5) * 2,
-                    rotation: Math.random() * 360,
-                    rotSpeed: (Math.random() - 0.5) * 8,
-                });
-            }
-        }
-
-        function drawConfetti() {
-            if (!confettiActive) { ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); return; }
-            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            let active = false;
-            confettiParticles.forEach(p => {
-                p.y += p.speed;
-                p.x += p.drift;
-                p.rotation += p.rotSpeed;
-                if (p.y < confettiCanvas.height + 20) active = true;
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation * Math.PI / 180);
-                ctx.fillStyle = p.color;
-                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-                ctx.restore();
-            });
-            if (active) requestAnimationFrame(drawConfetti);
-            else { confettiActive = false; confettiCanvas.style.display = 'none'; }
-        }
-
-        function startConfetti() {
-            confettiCanvas.style.display = 'block';
-            spawnConfetti();
-            confettiActive = true;
-            drawConfetti();
-        }
-
-        // ===== REACTION OVERLAYS =====
-        let reactionTimeout = null;
-        let isInReaction = false;
-
-        function showReaction(type, duration = 2000) {
-            if (isInReaction) return;
-            isInReaction = true;
-            clearTimeout(reactionTimeout);
-
-            const overlay = document.getElementById('overlay-' + type);
-            if (!overlay) { isInReaction = false; return; }
-
-            overlay.classList.add('active');
-            vibrate([20, 30, 20]);
-
-            if (type === 'celebrate') startConfetti();
-
-            reactionTimeout = setTimeout(() => {
-                overlay.classList.remove('active');
-                isInReaction = false;
-            }, duration);
-        }
-
         // ===== EYE TRACKING =====
         let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
         let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
@@ -593,8 +409,8 @@
             const maxOffset = 10;
             targetX = Math.max(-maxOffset, Math.min(maxOffset, (mouseX - (leftEye.left + leftEye.width / 2)) / 10));
             targetY = Math.max(-maxOffset, Math.min(maxOffset, (mouseY - (leftEye.top + leftEye.height / 2)) / 10));
-            currentX += (targetX - currentX) * 0.12;
-            currentY += (targetY - currentY) * 0.12;
+            currentX += (targetX - currentX) * 0.1;
+            currentY += (targetY - currentY) * 0.1;
             const tx = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
             document.getElementById('shape-left').style.transform = tx;
             document.getElementById('shape-right').style.transform = tx;
@@ -608,27 +424,30 @@
 
         // ===== EXPRESSIONS =====
         const expressions = {
-            normal: { name: 'NORMAL', shape: 'normal', mouth: '', ring: 'rgba(0,229,255,0.05)', ambient: 'rgba(0,200,255,0.02)' },
-            happy: { name: 'FELIZ', shape: 'happy', mouth: 'smile', ring: 'rgba(0,255,136,0.08)', ambient: 'rgba(0,255,136,0.02)' },
-            sad: { name: 'TRISTE', shape: 'sad', mouth: 'frown', ring: 'rgba(68,136,255,0.06)', ambient: 'rgba(68,136,255,0.015)' },
-            angry: { name: 'BRAVO', shape: 'angry', mouth: 'line', ring: 'rgba(255,51,68,0.06)', ambient: 'rgba(255,51,68,0.015)' },
-            surprised: { name: 'SURPRESO', shape: 'surprised', mouth: 'o', ring: 'rgba(0,204,255,0.08)', ambient: 'rgba(0,204,255,0.02)' },
-            love: { name: 'AMOR', shape: 'love', mouth: 'smile', ring: 'rgba(255,102,170,0.08)', ambient: 'rgba(255,102,170,0.02)' },
-            sleepy: { name: 'SONO', shape: 'sleepy', mouth: '', ring: 'rgba(85,119,153,0.03)', ambient: 'rgba(85,119,153,0.008)' },
-            squint: { name: 'DESCONFIADO', shape: 'squint', mouth: 'line', ring: 'rgba(255,170,0,0.06)', ambient: 'rgba(255,170,0,0.015)' },
-            thinking: { name: 'PENSANDO', shape: 'thinking', mouth: 'line', ring: 'rgba(170,136,255,0.06)', ambient: 'rgba(170,136,255,0.015)' },
-            confused: { name: 'CONFUSO', shape: 'confused', mouth: 'o', ring: 'rgba(255,136,68,0.06)', ambient: 'rgba(255,136,68,0.015)' },
-            neutral: { name: 'MEH', shape: 'neutral', mouth: 'neutral', ring: 'rgba(136,170,187,0.04)', ambient: 'rgba(136,170,187,0.01)' },
+            normal: { name: 'NORMAL', shape: 'normal', mouth: '', ring: 'rgba(0,229,255,0.04)', ambient: 'rgba(0,200,255,0.015)' },
+            happy: { name: 'FELIZ', shape: 'happy', mouth: 'smile', ring: 'rgba(0,255,136,0.07)', ambient: 'rgba(0,255,136,0.015)' },
+            sad: { name: 'TRISTE', shape: 'sad', mouth: 'frown', ring: 'rgba(68,136,255,0.05)', ambient: 'rgba(68,136,255,0.01)' },
+            angry: { name: 'BRAVO', shape: 'angry', mouth: 'line', ring: 'rgba(255,51,68,0.05)', ambient: 'rgba(255,51,68,0.01)' },
+            surprised: { name: 'SURPRESO', shape: 'surprised', mouth: 'o', ring: 'rgba(0,204,255,0.07)', ambient: 'rgba(0,204,255,0.015)' },
+            love: { name: 'AMOR', shape: 'love', mouth: 'smile', ring: 'rgba(255,102,170,0.07)', ambient: 'rgba(255,102,170,0.015)' },
+            sleepy: { name: 'SONO', shape: 'sleepy', mouth: '', ring: 'rgba(85,119,153,0.025)', ambient: 'rgba(85,119,153,0.005)' },
+            squint: { name: 'DESCONFIADO', shape: 'squint', mouth: 'line', ring: 'rgba(255,170,0,0.05)', ambient: 'rgba(255,170,0,0.01)' },
+            thinking: { name: 'PENSANDO', shape: 'thinking', mouth: 'line', ring: 'rgba(170,136,255,0.05)', ambient: 'rgba(170,136,255,0.01)' },
+            confused: { name: 'CONFUSO', shape: 'confused', mouth: 'o', ring: 'rgba(255,136,68,0.05)', ambient: 'rgba(255,136,68,0.01)' },
+            neutral: { name: 'MEH', shape: 'neutral', mouth: 'neutral', ring: 'rgba(136,170,187,0.03)', ambient: 'rgba(136,170,187,0.008)' },
             shock: { name: 'CHOQUE', shape: 'shock', mouth: 'o', ring: 'rgba(255,255,255,0.06)', ambient: 'rgba(255,255,255,0.015)' },
-            excited: { name: 'ANIMADO', shape: 'excited', mouth: 'grin', ring: 'rgba(255,221,0,0.08)', ambient: 'rgba(255,221,0,0.02)' },
-            worried: { name: 'PREOCUPADO', shape: 'worried', mouth: 'frown', ring: 'rgba(204,136,255,0.06)', ambient: 'rgba(204,136,255,0.015)' },
+            excited: { name: 'ANIMADO', shape: 'excited', mouth: 'grin', ring: 'rgba(255,221,0,0.07)', ambient: 'rgba(255,221,0,0.015)' },
+            worried: { name: 'PREOCUPADO', shape: 'worried', mouth: 'frown', ring: 'rgba(204,136,255,0.05)', ambient: 'rgba(204,136,255,0.01)' },
+            shy: { name: 'TIMIDO', shape: 'shy', mouth: 'shy', ring: 'rgba(255,136,170,0.06)', ambient: 'rgba(255,136,170,0.012)' },
+            curious: { name: 'CURIOSO', shape: 'curious', mouth: 'curious', ring: 'rgba(102,221,255,0.06)', ambient: 'rgba(102,221,255,0.012)' },
+            content: { name: 'CONTENTE', shape: 'content', mouth: 'content', ring: 'rgba(136,255,170,0.05)', ambient: 'rgba(136,255,170,0.01)' },
         };
 
         let currentExpr = 'normal';
         let exprKeys = Object.keys(expressions);
         let exprIndex = 0;
 
-        function setExpression(key) {
+        function setExpression(key, playSound) {
             const expr = expressions[key];
             if (!expr) return;
             currentExpr = key;
@@ -639,17 +458,17 @@
             document.getElementById('ring-right').style.borderColor = expr.ring;
             document.getElementById('ambient').style.background = `radial-gradient(ellipse, ${expr.ambient}, transparent 70%)`;
             document.getElementById('mouth').className = 'mouth ' + expr.mouth;
-            playExpressionSound(key);
-            vibrate(15);
+            if (playSound !== false && sounds[key]) sounds[key]();
+            vibrate(6);
         }
 
         // ===== BLINK =====
         function blink() {
-            if (currentExpr === 'sleepy' || isInReaction) return;
+            if (currentExpr === 'sleepy') return;
             const leftShape = document.getElementById('shape-left');
             const rightShape = document.getElementById('shape-right');
-            playBlink();
-            vibrate(5);
+            sounds.blink();
+            vibrate(3);
             const savedClass = 'led-shape ' + expressions[currentExpr].shape;
             leftShape.className = 'led-shape blink';
             rightShape.className = 'led-shape blink';
@@ -658,87 +477,183 @@
                     leftShape.className = savedClass;
                     rightShape.className = savedClass;
                 }
-            }, 100);
+            }, 120);
             setTimeout(blink, 2000 + Math.random() * 3000);
         }
 
         // ===== WINK =====
         function wink(side) {
-            if (isInReaction) return;
-            playBlink();
-            vibrate(8);
+            sounds.wink();
+            vibrate(5);
             const shape = document.getElementById('shape-' + side);
             const savedClass = 'led-shape ' + expressions[currentExpr].shape;
             shape.className = 'led-shape wink';
-            setTimeout(() => { shape.className = savedClass; }, 200);
+            setTimeout(() => { shape.className = savedClass; }, 220);
         }
 
-        // ===== INTERACTION STATE =====
+        // ===== IDLE =====
+        let lastInteract = Date.now();
+        const updateInteract = () => { lastInteract = Date.now(); };
+
+        function idleBehavior() {
+            const idleTime = Date.now() - lastInteract;
+            if (idleTime > 12000 && currentExpr === 'normal') {
+                const r = Math.random();
+                if (r < 0.25) {
+                    const leftShape = document.getElementById('shape-left');
+                    const rightShape = document.getElementById('shape-right');
+                    const baseTransform = leftShape.style.transform;
+                    leftShape.style.transform = `translate(calc(-50% + 8px), calc(-50% - 2px))`;
+                    rightShape.style.transform = `translate(calc(-50% + 8px), calc(-50% - 2px))`;
+                    setTimeout(() => {
+                        leftShape.style.transform = `translate(calc(-50% - 6px), calc(-50% + 3px))`;
+                        rightShape.style.transform = `translate(calc(-50% - 6px), calc(-50% + 3px))`;
+                    }, 400);
+                    setTimeout(() => {
+                        leftShape.style.transform = baseTransform;
+                        rightShape.style.transform = baseTransform;
+                    }, 800);
+                } else if (r < 0.45) {
+                    setExpression('sleepy', false);
+                    setTimeout(() => { if (currentExpr === 'sleepy') setExpression('normal', false); }, 1500);
+                } else if (r < 0.65) {
+                    setExpression('curious', false);
+                    setTimeout(() => { if (currentExpr === 'curious') setExpression('normal', false); }, 2000);
+                }
+            }
+            setTimeout(idleBehavior, 4000 + Math.random() * 4000);
+        }
+
+        // ===== RANDOM EXPRESSIONS =====
+        function scheduleRandomExpression() {
+            const delay = 10000 + Math.random() * 8000;
+            setTimeout(() => {
+                if (Date.now() - lastInteract > 10000 && currentExpr === 'normal') {
+                    const gentleExprs = ['happy', 'curious', 'content', 'thinking', 'neutral'];
+                    const pick = gentleExprs[Math.floor(Math.random() * gentleExprs.length)];
+                    setExpression(pick, true);
+                    setTimeout(() => { if (currentExpr === pick) setExpression('normal', false); }, 3000 + Math.random() * 2000);
+                }
+                scheduleRandomExpression();
+            }, delay);
+        }
+
+        // ===== INTERACTIONS =====
         let longPressTimer = null;
         let isLongPress = false;
-        let isRapidCycling = false;
         let rapidInterval = null;
 
         function stopRapidCycle() {
             if (rapidInterval) { clearInterval(rapidInterval); rapidInterval = null; }
-            isRapidCycling = false;
         }
 
-        // Eye touch handlers
+        // ===== EYE INTERACTIONS (fixed) =====
         ['left', 'right'].forEach(side => {
             const eye = document.getElementById('eye-' + side);
+            let petting = false;
+            let isLongPress = false;
+            let longPressTimer = null;
+            let rapidInterval = null;
+            let touchStartY = 0;
+            let touchStartTime = 0;
 
+            function stopRapid() {
+                if (rapidInterval) { clearInterval(rapidInterval); rapidInterval = null; }
+                if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+            }
+
+            // TOUCH START
             eye.addEventListener('touchstart', e => {
-                initAudio();
+                ensureAudio();
                 requestWakeLock();
                 goFullscreen();
                 e.preventDefault();
-                isLongPress = false;
-                playTouch();
-                vibrate(10);
 
+                const touch = e.touches[0];
+                touchStartY = touch.clientY;
+                touchStartTime = Date.now();
+
+                updateInteract();
+                isLongPress = false;
+                petting = false;
+
+                sounds.touch();
+                vibrate(5);
+
+                // Long press = rapid cycle
                 longPressTimer = setTimeout(() => {
                     isLongPress = true;
-                    isRapidCycling = true;
-                    let rapidIndex = exprIndex;
+                    let rapidIndex = exprKeys.indexOf(currentExpr);
                     rapidInterval = setInterval(() => {
                         rapidIndex = (rapidIndex + 1) % exprKeys.length;
-                        setExpression(exprKeys[rapidIndex]);
-                        vibrate(5);
+                        setExpression(exprKeys[rapidIndex], false);
+                        vibrate(3);
                     }, 250);
                 }, 500);
 
+                // Wake up if sleepy
                 if (currentExpr === 'sleepy') {
                     setTimeout(() => setExpression('surprised'), 100);
                     setTimeout(() => setExpression('normal'), 600);
                 }
             }, { passive: false });
 
+            // TOUCH MOVE (petting detection)
+            eye.addEventListener('touchmove', e => {
+                e.preventDefault();
+
+                const touch = e.touches[0];
+                const dy = Math.abs(touch.clientY - touchStartY);
+                const dt = Date.now() - touchStartTime;
+
+                // Petting: moved more than 30px vertically and held for 200ms+
+                if (dy > 30 && dt > 200 && !petting && !isLongPress) {
+                    petting = true;
+                    stopRapid();
+                    sounds.pet();
+                    vibrate([8, 12, 8, 12, 8]);
+                    setExpression('love');
+                }
+            }, { passive: false });
+
+            // TOUCH END
             eye.addEventListener('touchend', e => {
-                clearTimeout(longPressTimer);
-                stopRapidCycle();
-                if (!isLongPress && !isInReaction) wink(side);
+                stopRapid();
+                const dt = Date.now() - touchStartTime;
+
+                if (petting) {
+                    // Was petting - transition to happy then normal
+                    setTimeout(() => setExpression('happy'), 500);
+                    setTimeout(() => setExpression('normal'), 2500);
+                } else if (isLongPress) {
+                    // Was long press - stay at current expression
+                    // exprIndex already updated by rapid cycle
+                    exprIndex = exprKeys.indexOf(currentExpr);
+                } else if (dt < 500) {
+                    // Short tap = wink
+                    wink(side);
+                }
+
+                petting = false;
+                isLongPress = false;
             });
 
-            eye.addEventListener('click', () => { initAudio(); if (!isInReaction) wink(side); });
+            // MOUSE (desktop fallback)
+            eye.addEventListener('mousedown', e => {
+                ensureAudio();
+                updateInteract();
+                sounds.touch();
+                vibrate(5);
+            });
 
-            // Petting
-            let touchStartY = 0;
-            eye.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
-            eye.addEventListener('touchmove', e => {
-                const dy = e.touches[0].clientY - touchStartY;
-                if (Math.abs(dy) > 25 && !isInReaction) {
-                    playTouch();
-                    vibrate(8);
-                    if (currentExpr !== 'happy' && currentExpr !== 'love') {
-                        setExpression('love');
-                        setTimeout(() => setExpression('happy'), 800);
-                    }
-                }
-            }, { passive: true });
+            eye.addEventListener('click', e => {
+                ensureAudio();
+                updateInteract();
+                wink(side);
+            });
         });
 
-        // ===== SWIPE TO CHANGE EXPRESSION =====
+        // Swipe
         let touchStartX = 0;
         let touchStartY = 0;
         let touchStartTime = 0;
@@ -755,98 +670,103 @@
             const dy = t.clientY - touchStartY;
             const dt = Date.now() - touchStartTime;
 
-            // Only process as swipe if not a long press and quick enough
-            if (dt < 400 && Math.abs(dx) > 50 && Math.abs(dy) < 80 && !isInReaction && !isRapidCycling) {
-                initAudio();
-                requestWakeLock();
-                goFullscreen();
+            if (dt < 400 && Math.abs(dx) > 50 && Math.abs(dy) < 80) {
+                ensureAudio();
+                updateInteract();
                 if (dx > 0) exprIndex = (exprIndex + 1) % exprKeys.length;
                 else exprIndex = (exprIndex - 1 + exprKeys.length) % exprKeys.length;
-                playSwoosh();
-                vibrate(12);
+                sounds.swoosh();
+                vibrate(6);
                 setExpression(exprKeys[exprIndex]);
             }
         }, { passive: true });
 
-        // ===== DOUBLE TAP = SLEEP/WAKE =====
+        // Double tap = sleep/wake
         let lastTap = 0;
         document.addEventListener('touchend', e => {
             const now = Date.now();
-            if (now - lastTap < 300 && !isInReaction) {
-                initAudio();
-                requestWakeLock();
-                goFullscreen();
-                vibrate(25);
+            if (now - lastTap < 300) {
+                ensureAudio();
+                updateInteract();
+                vibrate(20);
                 if (currentExpr === 'sleepy') {
-                    playBoot();
+                    sounds.boot();
                     setExpression('surprised');
-                    setTimeout(() => setExpression('normal'), 500);
+                    setTimeout(() => setExpression('normal'), 600);
                 } else {
                     setExpression('sleepy');
-                    showReaction('sleep', 2500);
                 }
             }
             lastTap = now;
         }, { passive: true });
 
-        // ===== SHAKE =====
-        let lastShakeX = 0, lastShakeY = 0, lastShakeZ = 0;
+        // ===== SHAKE - IMPROVED =====
+        let lastAccX = 0, lastAccY = 0, lastAccZ = 0;
         let shakeCooldown = false;
+        let shakeCount = 0;
+
         if (window.DeviceMotionEvent) {
             window.addEventListener('devicemotion', e => {
                 const acc = e.accelerationIncludingGravity;
                 if (!acc) return;
-                const delta = Math.abs(acc.x - lastShakeX) + Math.abs(acc.y - lastShakeY) + Math.abs(acc.z - lastShakeZ);
-                if (delta > 15 && !shakeCooldown && !isInReaction) {
-                    shakeCooldown = true;
-                    initAudio();
-                    vibrate([30, 50, 30]);
-                    setExpression('surprised');
-                    showReaction('shock', 2000);
-                    setTimeout(() => setExpression('normal'), 2500);
-                    setTimeout(() => { shakeCooldown = false; }, 3000);
+
+                const delta = Math.abs(acc.x - lastAccX) + Math.abs(acc.y - lastAccY) + Math.abs(acc.z - lastAccZ);
+
+                // Lower threshold for better detection
+                if (delta > 8 && !shakeCooldown) {
+                    shakeCount++;
+                    // Need 2 consecutive shakes to trigger
+                    if (shakeCount >= 2) {
+                        shakeCooldown = true;
+                        shakeCount = 0;
+                        ensureAudio();
+                        updateInteract();
+                        vibrate([40, 60, 40, 60, 40]);
+                        sounds.shock();
+                        setExpression('shock');
+                        setTimeout(() => setExpression('surprised'), 600);
+                        setTimeout(() => setExpression('normal'), 1800);
+                        setTimeout(() => { shakeCooldown = false; }, 2500);
+                    }
+                } else if (delta < 3) {
+                    shakeCount = 0;
                 }
-                lastShakeX = acc.x; lastShakeY = acc.y; lastShakeZ = acc.z;
+
+                lastAccX = acc.x; lastAccY = acc.y; lastAccZ = acc.z;
             }, { passive: true });
         }
 
-        // ===== KEYBOARD =====
+        // Device orientation
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', e => {
+                if (currentExpr === 'sleepy') return;
+                if (e.beta > 60 && Date.now() - lastInteract > 2000) {
+                    setExpression('sad', false);
+                    setTimeout(() => { if (currentExpr === 'sad') setExpression('normal', false); }, 2500);
+                }
+                if (e.beta < -25 && Date.now() - lastInteract > 2000) {
+                    setExpression('happy', false);
+                    setTimeout(() => { if (currentExpr === 'happy') setExpression('normal', false); }, 2500);
+                }
+            }, { passive: true });
+        }
+
+        // Keyboard
         document.addEventListener('keydown', e => {
+            ensureAudio();
+            updateInteract();
             if (e.key === 'ArrowRight') { exprIndex = (exprIndex + 1) % exprKeys.length; setExpression(exprKeys[exprIndex]); }
             else if (e.key === 'ArrowLeft') { exprIndex = (exprIndex - 1 + exprKeys.length) % exprKeys.length; setExpression(exprKeys[exprIndex]); }
-            else if (e.key === ' ') { blink(); vibrate(8); }
+            else if (e.key === ' ') { blink(); vibrate(4); }
             else if (e.key === 'w') { wink('left'); }
             else if (e.key === 'e') { wink('right'); }
-            else if (e.key === 's') { setExpression('sleepy'); showReaction('sleep', 2500); }
+            else if (e.key === 's') { setExpression('sleepy'); }
             else if (e.key === 'f') { goFullscreen(); requestWakeLock(); }
         });
 
-        // ===== RANDOM EXPRESSIONS (only when idle) =====
-        let lastInteract = Date.now();
-        const updateInteract = () => { lastInteract = Date.now(); };
-        document.addEventListener('touchstart', updateInteract, { passive: true });
-        document.addEventListener('click', updateInteract);
-        document.addEventListener('mousemove', updateInteract);
-        document.addEventListener('keydown', updateInteract);
-
-        let randomExprTimer = null;
-        function scheduleRandomExpression() {
-            const delay = 8000 + Math.random() * 7000; // 8-15s
-            randomExprTimer = setTimeout(() => {
-                if (Date.now() - lastInteract > 8000 && !isInReaction && currentExpr !== 'sleepy') {
-                    const randomExpr = exprKeys[Math.floor(Math.random() * exprKeys.length)];
-                    if (randomExpr !== currentExpr) {
-                        setExpression(randomExpr);
-                        exprIndex = exprKeys.indexOf(randomExpr);
-                    }
-                }
-                scheduleRandomExpression();
-            }, delay);
-        }
-
-        // ===== RANDOM TWITCH =====
+        // Random twitch
         function randomTwitch() {
-            if (Math.random() > 0.65 && currentExpr === 'normal' && !isInReaction) {
+            if (Math.random() > 0.6 && currentExpr === 'normal' && Date.now() - lastInteract > 3000) {
                 const eye = document.getElementById('eye-' + (Math.random() > 0.5 ? 'left' : 'right'));
                 eye.classList.add('twitch');
                 setTimeout(() => eye.classList.remove('twitch'), 300);
@@ -854,31 +774,21 @@
             setTimeout(randomTwitch, 3000 + Math.random() * 6000);
         }
 
-        // ===== HINT AUTO-HIDE =====
+        // Hint auto-hide
         setTimeout(() => { document.getElementById('hint').classList.add('hidden'); }, 8000);
 
-        // ===== BOOT =====
-        function bootSequence() {
-            const face = document.getElementById('face');
-            face.style.opacity = '0';
-            face.style.transform = 'scale(0.3)';
-            setTimeout(() => {
-                face.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                face.style.opacity = '1';
-                face.style.transform = 'scale(1.3)';
-                playBoot();
-                vibrate([40, 80, 40]);
-            }, 200);
-            setTimeout(() => { face.style.transition = ''; setExpression('normal'); }, 1200);
+        // Hide audio hint on first interaction
+        function hideAudioHint() {
+            document.getElementById('audio-hint').classList.add('hidden');
         }
+        document.addEventListener('touchstart', hideAudioHint, { once: true });
+        document.addEventListener('click', hideAudioHint, { once: true });
 
         // ===== INIT =====
-        document.addEventListener('touchstart', () => { initAudio(); requestWakeLock(); goFullscreen(); }, { once: true });
-        document.addEventListener('click', () => { initAudio(); requestWakeLock(); goFullscreen(); }, { once: true });
-
-        bootSequence();
+        setExpression('normal', false);
         setTimeout(blink, 2000);
         setTimeout(randomTwitch, 3000);
+        setTimeout(idleBehavior, 5000);
         scheduleRandomExpression();
     </script>
 </body>
