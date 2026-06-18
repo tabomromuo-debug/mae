@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#050508">
@@ -29,6 +29,8 @@
             justify-content: center;
             align-items: center;
             font-family: 'Segoe UI', system-ui, sans-serif;
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: auto;
         }
 
         .scanlines {
@@ -61,9 +63,10 @@
         /* LED EYE */
         .led-eye {
             position: relative;
-            width: clamp(80px, 28vw, 120px);
-            height: clamp(80px, 28vw, 120px);
+            width: clamp(90px, 32vw, 140px);
+            height: clamp(90px, 32vw, 140px);
             display: flex; justify-content: center; align-items: center;
+            touch-action: none;
         }
         .eye-housing {
             position: absolute; width: 100%; height: 100%;
@@ -249,6 +252,17 @@
         .led-shape.wink .led-dot { opacity: 0; transform: translate(-50%, -50%) scale(0); }
         .led-shape.wink .led-bar { opacity: 1; width: 38px; height: 3px; border-radius: 1.5px; background: #00e5ff; box-shadow: 0 0 5px rgba(0,229,255,0.3), 0 0 12px rgba(0,229,255,0.1), inset 0 0 2px rgba(255,255,255,0.1); transform: translate(-50%, -50%); }
 
+        /* love - olhos de coracao */
+        .led-shape.love .led-dot { opacity: 1; width: 12px; height: 12px; background: #ff3366; box-shadow: 0 0 12px rgba(255,51,102,0.6), 0 0 30px rgba(255,51,102,0.3), inset 0 0 4px rgba(255,255,255,0.3); transform: translate(-50%, -50%) rotate(45deg); border-radius: 0; }
+        .led-shape.love .led-dot::before { content: ''; position: absolute; width: 12px; height: 12px; background: #ff3366; border-radius: 50%; top: -6px; left: 0; box-shadow: 0 0 8px rgba(255,51,102,0.4); }
+        .led-shape.love .led-dot::after { content: ''; position: absolute; width: 12px; height: 12px; background: #ff3366; border-radius: 50%; top: 0; left: -6px; box-shadow: 0 0 8px rgba(255,51,102,0.4); }
+        .led-shape.love .led-bar { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
+        .led-shape.love { animation: lovePulse 0.8s ease-in-out infinite alternate; }
+        @keyframes lovePulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            100% { transform: translate(-50%, -50%) scale(1.15); }
+        }
+
         /* Animations for expressions */
         @keyframes alertPulse {
             0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
@@ -352,6 +366,11 @@
         .mouth.party { width: 30px; height: 12px; border-radius: 0 0 15px 15px; background: rgba(255,0,255,0.05); border-bottom: 2px solid rgba(255,0,255,0.12); box-shadow: 0 0 12px rgba(255,0,255,0.06); animation: mouthParty 0.3s ease-in-out infinite alternate; }
         .mouth.cool { width: 24px; height: 2px; border-radius: 1px; background: rgba(0,229,255,0.12); box-shadow: 0 0 6px rgba(0,229,255,0.04); }
         .mouth.worried { width: 24px; height: 6px; border-radius: 12px 12px 0 0; background: rgba(204,136,255,0.04); border-top: 2px solid rgba(204,136,255,0.1); box-shadow: 0 0 6px rgba(204,136,255,0.03); }
+        .mouth.love { width: 16px; height: 14px; border-radius: 0 0 16px 16px; background: rgba(255,51,102,0.08); border-bottom: 2px solid rgba(255,51,102,0.2); box-shadow: 0 0 12px rgba(255,51,102,0.08); animation: mouthLove 0.8s ease-in-out infinite alternate; }
+        @keyframes mouthLove {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.1); }
+        }
 
         /* Mouth animations */
         @keyframes mouthDizzy {
@@ -527,12 +546,22 @@
         let audioCtx = null;
         let masterGain = null;
 
+        let audioUnlocked = false;
+
         function ensureAudio() {
+            if (!audioUnlocked) return false;
             if (!audioCtx) {
                 try {
                     audioCtx = new AudioCtx();
+                    compressor = audioCtx.createDynamicsCompressor();
+                    compressor.threshold.value = -24;
+                    compressor.knee.value = 30;
+                    compressor.ratio.value = 12;
+                    compressor.attack.value = 0.003;
+                    compressor.release.value = 0.25;
                     masterGain = audioCtx.createGain();
-                    masterGain.gain.value = 0.5;
+                    masterGain.gain.value = 0.45;
+                    compressor.connect(masterGain);
                     masterGain.connect(audioCtx.destination);
                 } catch(e) { return false; }
             }
@@ -542,7 +571,16 @@
             return !!audioCtx;
         }
 
-        function playTone(freq, dur, type, vol) {
+        
+
+        function createFilter(type, freq, Q) {
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = type || 'lowpass';
+            filter.frequency.value = freq || 3000;
+            filter.Q.value = Q || 1;
+            return filter;
+        }
+function playTone(freq, dur, type, vol) {
             if (!ensureAudio() || !audioCtx) return;
             try {
                 const osc = audioCtx.createOscillator();
@@ -582,7 +620,285 @@
             } catch(e) {}
         }
 
-        // ===== SOUND LIBRARY =====
+        
+
+        function playRichTone(freq, dur, vol, harmonics) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const duration = dur || 0.15;
+                const volume = vol || 0.04;
+                const harm = harmonics || [1, 0.5, 0.25, 0.12];
+                const master = audioCtx.createGain();
+                master.connect(compressor);
+                const endTime = t + duration + 0.3;
+                harm.forEach((amp, i) => {
+                    if (amp < 0.01) return;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const filter = createFilter('lowpass', freq * (i + 1) * 2, 2);
+                    osc.frequency.value = freq * (i + 1);
+                    osc.type = i === 0 ? 'sine' : (i === 1 ? 'triangle' : 'sawtooth');
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(master);
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(amp * volume, t + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(amp * volume * 0.3, t + duration * 0.5);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+                    filter.frequency.setValueAtTime(freq * 4, t);
+                    filter.frequency.exponentialRampToValueAtTime(freq * 1.5, t + duration);
+                    osc.start(t);
+                    osc.stop(endTime);
+                });
+                master.gain.setValueAtTime(1, t);
+                master.gain.exponentialRampToValueAtTime(0.0001, endTime);
+                master.gain.setValueAtTime(0, endTime + 0.01);
+            } catch(e) {}
+        }
+
+        function playPing(freq, dur, vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const duration = dur || 0.12;
+                const volume = vol || 0.035;
+                const osc1 = audioCtx.createOscillator();
+                const gain1 = audioCtx.createGain();
+                const filter1 = createFilter('bandpass', freq, 8);
+                osc1.frequency.value = freq;
+                osc1.type = 'sine';
+                osc1.connect(filter1);
+                filter1.connect(gain1);
+                gain1.connect(compressor);
+                gain1.gain.setValueAtTime(0, t);
+                gain1.gain.linearRampToValueAtTime(volume, t + 0.005);
+                gain1.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                const filter2 = createFilter('bandpass', freq * 2.5, 6);
+                osc2.frequency.value = freq * 2.5;
+                osc2.type = 'triangle';
+                osc2.connect(filter2);
+                filter2.connect(gain2);
+                gain2.connect(compressor);
+                gain2.gain.setValueAtTime(0, t);
+                gain2.gain.linearRampToValueAtTime(volume * 0.3, t + 0.003);
+                gain2.gain.exponentialRampToValueAtTime(0.0001, t + duration * 0.6);
+                const click = audioCtx.createOscillator();
+                const clickGain = audioCtx.createGain();
+                click.frequency.value = freq * 0.5;
+                click.type = 'square';
+                click.connect(clickGain);
+                clickGain.connect(compressor);
+                clickGain.gain.setValueAtTime(volume * 0.15, t);
+                clickGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.01);
+                osc1.start(t);
+                osc1.stop(t + duration + 0.1);
+                osc2.start(t);
+                osc2.stop(t + duration + 0.1);
+                click.start(t);
+                click.stop(t + 0.02);
+            } catch(e) {}
+        }
+
+        function playImpact(freq, dur, vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const duration = dur || 0.3;
+                const volume = vol || 0.04;
+                const osc1 = audioCtx.createOscillator();
+                const gain1 = audioCtx.createGain();
+                const filter1 = createFilter('lowpass', freq * 2, 1);
+                osc1.frequency.setValueAtTime(freq, t);
+                osc1.frequency.exponentialRampToValueAtTime(freq * 0.3, t + duration);
+                osc1.type = 'sine';
+                osc1.connect(filter1);
+                filter1.connect(gain1);
+                gain1.connect(compressor);
+                gain1.gain.setValueAtTime(0, t);
+                gain1.gain.linearRampToValueAtTime(volume, t + 0.02);
+                gain1.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                const filter2 = createFilter('lowpass', freq * 4, 2);
+                osc2.frequency.setValueAtTime(freq * 1.5, t);
+                osc2.frequency.exponentialRampToValueAtTime(freq * 0.5, t + duration);
+                osc2.type = 'triangle';
+                osc2.connect(filter2);
+                filter2.connect(gain2);
+                gain2.connect(compressor);
+                gain2.gain.setValueAtTime(0, t);
+                gain2.gain.linearRampToValueAtTime(volume * 0.5, t + 0.015);
+                gain2.gain.exponentialRampToValueAtTime(0.0001, t + duration * 0.7);
+                osc1.start(t);
+                osc1.stop(t + duration + 0.1);
+                osc2.start(t);
+                osc2.stop(t + duration + 0.1);
+            } catch(e) {}
+        }
+
+        function playSweep(from, to, dur, vol, type) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const duration = dur || 0.2;
+                const volume = vol || 0.035;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = createFilter('bandpass', (from + to) / 2, 4);
+                osc.frequency.setValueAtTime(from, t);
+                osc.frequency.exponentialRampToValueAtTime(to, t + duration);
+                osc.type = type || 'sine';
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(compressor);
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(volume, t + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+                const bufferSize = audioCtx.sampleRate * duration;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+                }
+                const noise = audioCtx.createBufferSource();
+                const noiseGain = audioCtx.createGain();
+                const noiseFilter = createFilter('bandpass', (from + to) / 2, 3);
+                noise.buffer = noiseBuffer;
+                noise.connect(noiseFilter);
+                noiseFilter.connect(noiseGain);
+                noiseGain.connect(compressor);
+                noiseGain.gain.value = volume * 0.4;
+                osc.start(t);
+                osc.stop(t + duration + 0.05);
+                noise.start(t);
+                noise.stop(t + duration);
+            } catch(e) {}
+        }
+
+        function playRichChord(freqs, dur, vol, stagger) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const duration = dur || 0.2;
+                const volume = vol || 0.025;
+                const delay = stagger || 0.05;
+                freqs.forEach((f, i) => {
+                    setTimeout(() => {
+                        playRichTone(f, duration, volume, [1, 0.4, 0.15, 0.05]);
+                    }, i * delay * 1000);
+                });
+            } catch(e) {}
+        }
+
+        function playDrone(freq, dur, vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const duration = dur || 0.5;
+                const volume = vol || 0.02;
+                const freqs = [freq, freq * 1.01, freq * 1.5, freq * 2];
+                const types = ['sine', 'sine', 'triangle', 'sine'];
+                const amps = [1, 0.6, 0.3, 0.15];
+                freqs.forEach((f, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const filter = createFilter('lowpass', freq * 3, 2);
+                    osc.frequency.value = f;
+                    osc.type = types[i];
+                    if (i === 1) osc.detune.value = 8;
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(compressor);
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(amps[i] * volume, t + 0.1);
+                    gain.gain.setValueAtTime(amps[i] * volume, t + duration - 0.2);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t + duration + 0.3);
+                    osc.start(t);
+                    osc.stop(t + duration + 0.5);
+                });
+            } catch(e) {}
+        }
+
+        function playMechClick(vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const volume = vol || 0.04;
+                [0, 0.015].forEach((offset, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const filter = createFilter('highpass', 2000, 2);
+                    osc.frequency.value = 1500 + i * 300;
+                    osc.type = 'square';
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(compressor);
+                    gain.gain.setValueAtTime(0, t + offset);
+                    gain.gain.linearRampToValueAtTime(volume * (1 - i * 0.3), t + offset + 0.002);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.015);
+                    osc.start(t + offset);
+                    osc.stop(t + offset + 0.02);
+                });
+            } catch(e) {}
+        }
+
+        function playBell(freq, dur, vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const duration = dur || 0.6;
+                const volume = vol || 0.03;
+                const osc1 = audioCtx.createOscillator();
+                const gain1 = audioCtx.createGain();
+                osc1.frequency.value = freq;
+                osc1.type = 'sine';
+                osc1.connect(gain1);
+                gain1.connect(compressor);
+                gain1.gain.setValueAtTime(0, t);
+                gain1.gain.linearRampToValueAtTime(volume, t + 0.01);
+                gain1.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+                [2, 3, 4.2, 5.4].forEach((mult, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.frequency.value = freq * mult;
+                    osc.type = 'sine';
+                    osc.connect(gain);
+                    gain.connect(compressor);
+                    const decay = duration * (0.3 + i * 0.15);
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(volume * [0.5, 0.3, 0.2, 0.1][i], t + 0.005);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+                    osc.start(t);
+                    osc.stop(t + decay + 0.1);
+                });
+                osc1.start(t);
+                osc1.stop(t + duration + 0.1);
+            } catch(e) {}
+        }
+
+        function playStep(freq, vol) {
+            if (!ensureAudio() || !audioCtx) return;
+            try {
+                const t = audioCtx.currentTime;
+                const volume = vol || 0.025;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = createFilter('bandpass', freq, 6);
+                osc.frequency.value = freq;
+                osc.type = 'triangle';
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(compressor);
+                gain.gain.setValueAtTime(0, t);
+                gain.gain.linearRampToValueAtTime(volume, t + 0.003);
+                gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+                osc.start(t);
+                osc.stop(t + 0.1);
+            } catch(e) {}
+        }
+// ===== SOUND LIBRARY =====
         const sounds = {
             blink: () => { playTone(800, 0.05, 'sine', 0.025); setTimeout(() => playTone(600, 0.05, 'sine', 0.02), 80); },
             wink: () => { playTone(700, 0.06, 'sine', 0.03); setTimeout(() => playTone(950, 0.04, 'sine', 0.02), 100); },
@@ -618,6 +934,38 @@
             unlock: () => playTone(600, 0.15, 'sine', 0.025),
             party: () => playChord([523, 659, 784, 1047, 1319], 0.2, 0.025),
             cool: () => { playSlide(400, 200, 0.3, 0.025); setTimeout(() => playTone(150, 0.2, 'triangle', 0.02), 300); },
+            love: () => { playChord([523, 659, 784, 1047], 0.3, 0.03); setTimeout(() => playTone(880, 0.5, 'sine', 0.025), 200); },
+            swipeUp: () => playChord([523, 659, 784], 0.2, 0.025),
+            swipeDown: () => { playTone(330, 0.22, 'sine', 0.025); setTimeout(() => playTone(262, 0.2, 'sine', 0.02), 220); },
+            swipeRight: () => playSlide(300, 900, 0.15, 0.025),
+            swipeLeft: () => playSlide(900, 300, 0.15, 0.025),
+            doubleTap: () => { playTone(1800, 0.04, 'sine', 0.018); setTimeout(() => playTone(1800, 0.04, 'sine', 0.018), 150); },
+            wake: () => { playTone(400, 0.03, 'sine', 0.03); setTimeout(() => playTone(900, 0.12, 'sine', 0.025), 50); },
+            shake: () => { playTone(80, 0.35, 'sawtooth', 0.035); setTimeout(() => playTone(300, 0.05, 'sine', 0.03), 100); },
+            idleLook: () => playTone(1300, 0.05, 'sine', 0.015),
+            idleSleep: () => playTone(140, 0.45, 'sine', 0.012),
+            idleCurious: () => { playTone(500, 0.06, 'sine', 0.02); setTimeout(() => playTone(700, 0.1, 'sine', 0.015), 120); },
+            idleThink: () => { playTone(600, 0.06, 'sine', 0.015); setTimeout(() => playTone(500, 0.08, 'sine', 0.012), 200); },
+            randomHappy: () => playChord([523, 659, 784], 0.2, 0.025),
+            randomCurious: () => { playTone(500, 0.06, 'sine', 0.02); setTimeout(() => playTone(700, 0.1, 'sine', 0.015), 120); },
+            randomContent: () => playChord([440, 554, 659], 0.3, 0.018),
+            randomThinking: () => { playTone(600, 0.06, 'sine', 0.015); setTimeout(() => playTone(500, 0.08, 'sine', 0.012), 200); },
+            randomNeutral: () => playTone(800, 0.05, 'sine', 0.015),
+            randomFocused: () => playTone(600, 0.08, 'sine', 0.02),
+            tiltForward: () => { playTone(330, 0.22, 'sine', 0.02); setTimeout(() => playTone(262, 0.2, 'sine', 0.015), 220); },
+            tiltBack: () => playChord([523, 659, 784], 0.2, 0.025),
+            tiltSide: () => { playTone(350, 0.1, 'sine', 0.02); setTimeout(() => playTone(280, 0.1, 'sine', 0.015), 120); },
+            keyBlink: () => playTone(800, 0.05, 'sine', 0.025),
+            keyWink: () => { playTone(700, 0.06, 'sine', 0.03); setTimeout(() => playTone(950, 0.04, 'sine', 0.02), 100); },
+            keySleep: () => playTone(140, 0.45, 'sine', 0.015),
+            keyFullscreen: () => playSlide(300, 900, 0.15, 0.025),
+            keyNumber: (idx) => { const freqs = [261, 293, 329, 349, 392, 440, 493, 523, 587]; if (idx < freqs.length) playTone(freqs[idx], 0.08, 'sine', 0.025); },
+            twitch: () => playTone(1300, 0.03, 'sine', 0.012),
+            cycleStep: () => playTone(600 + Math.random() * 400, 0.05, 'sine', 0.02),
+            petHappy: () => playChord([523, 659], 0.2, 0.025),
+            petExcited: () => playChord([523, 659, 784], 0.25, 0.03),
+            petWink: () => playTone(700, 0.06, 'sine', 0.03),
+            petStroke: (count) => playTone(600 + count * 50, 0.06, 'sine', 0.02 + count * 0.005),
         };
 
         // ===== VIBRATION =====
@@ -643,6 +991,8 @@
 
         // ===== EYE TRACKING =====
         let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let isTouching = false;
+        let activeTouchId = null;
         let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
         let trackingEnabled = true;
 
@@ -652,20 +1002,84 @@
                 return;
             }
             const leftEye = document.getElementById('eye-left').getBoundingClientRect();
-            const maxOffset = 10;
-            targetX = Math.max(-maxOffset, Math.min(maxOffset, (mouseX - (leftEye.left + leftEye.width / 2)) / 10));
-            targetY = Math.max(-maxOffset, Math.min(maxOffset, (mouseY - (leftEye.top + leftEye.height / 2)) / 10));
-            currentX += (targetX - currentX) * 0.1;
-            currentY += (targetY - currentY) * 0.1;
+            const maxOffset = 16; // Increased for more movement
+            targetX = Math.max(-maxOffset, Math.min(maxOffset, (mouseX - (leftEye.left + leftEye.width / 2)) / 8)); // More sensitive
+            targetY = Math.max(-maxOffset, Math.min(maxOffset, (mouseY - (leftEye.top + leftEye.height / 2)) / 8)); // More sensitive
+            // ULTRA FAST: 0.6 interpolation for instant response
+            currentX += (targetX - currentX) * 0.6;
+            currentY += (targetY - currentY) * 0.6;
             const tx = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
             document.getElementById('shape-left').style.transform = tx;
             document.getElementById('shape-right').style.transform = tx;
             requestAnimationFrame(updateTracking);
         }
 
-        document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-        document.addEventListener('touchmove', e => { if (e.touches.length) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; } }, { passive: true });
-        document.addEventListener('touchstart', e => { if (e.touches.length) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; } }, { passive: true });
+        document.addEventListener('mousemove', e => { 
+            if (!isTouching) {
+                mouseX = e.clientX; 
+                mouseY = e.clientY; 
+            }
+        });
+        
+        document.addEventListener('pointermove', e => {
+            if (e.pointerType === 'touch') {
+                isTouching = true;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            } else if (!isTouching) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+        }, { passive: true });
+        document.addEventListener('touchmove', e => { 
+            if (!isTouching) return;
+            let touch = null;
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                if (e.changedTouches[i].identifier === activeTouchId) {
+                    touch = e.changedTouches[i];
+                    break;
+                }
+            }
+            if (!touch) {
+                for (let i = 0; i < e.touches.length; i++) {
+                    if (e.touches[i].identifier === activeTouchId) {
+                        touch = e.touches[i];
+                        break;
+                    }
+                }
+            }
+            if (touch) {
+                mouseX = touch.clientX; 
+                mouseY = touch.clientY; 
+            }
+        }, { passive: true });
+        
+        document.addEventListener('touchend', e => {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                if (e.changedTouches[i].identifier === activeTouchId) {
+                    isTouching = false;
+                    activeTouchId = null;
+                    break;
+                }
+            }
+            if (e.touches.length === 0) {
+                isTouching = false;
+                activeTouchId = null;
+            }
+        }, { passive: true });
+        
+        document.addEventListener('touchcancel', e => {
+            isTouching = false;
+            activeTouchId = null;
+        }, { passive: true });
+        document.addEventListener('touchstart', e => { 
+            if (e.touches.length) { 
+                isTouching = true;
+                activeTouchId = e.touches[0].identifier;
+                mouseX = e.touches[0].clientX; 
+                mouseY = e.touches[0].clientY; 
+            } 
+        }, { passive: true });
         updateTracking();
 
         // ===== EXPRESSIONS =====
@@ -701,6 +1115,7 @@
             unlock:     { name: 'DESBLOQUEADO', shape: 'unlock',    mouth: 'unlock',       ring: 'rgba(85,255,85,0.06)',   ambient: 'rgba(85,255,85,0.012)',  hasTracking: false },
             party:      { name: 'FESTA',       shape: 'party',      mouth: 'party',        ring: 'rgba(255,0,255,0.08)',   ambient: 'rgba(255,0,255,0.018)',  hasTracking: true },
             cool:       { name: 'MANEIRO',     shape: 'cool',       mouth: 'cool',         ring: 'rgba(0,229,255,0.05)',   ambient: 'rgba(0,229,255,0.01)',   hasTracking: true },
+            love:       { name: 'AMOR',        shape: 'love',       mouth: 'love',         ring: 'rgba(255,51,102,0.08)',  ambient: 'rgba(255,51,102,0.02)',  hasTracking: true },
         };
 
         let currentExpr = 'normal';
@@ -729,7 +1144,7 @@
             if (ambient) ambient.style.background = `radial-gradient(ellipse, ${expr.ambient}, transparent 70%)`;
             if (mouth) mouth.className = 'mouth ' + expr.mouth;
 
-            if (playSound !== false && sounds[key]) sounds[key]();
+            if (playSound !== false && audioUnlocked && sounds[key]) sounds[key]();
             vibrate(5);
         }
 
@@ -742,7 +1157,7 @@
                 scheduleBlink();
                 return;
             }
-            sounds.blink();
+            if (audioUnlocked) sounds.blink();
             vibrate(2);
             const savedClass = 'led-shape ' + expressions[currentExpr].shape;
             leftShape.className = 'led-shape blink';
@@ -762,7 +1177,7 @@
 
         // ===== WINK =====
         function wink(side) {
-            sounds.wink();
+            if (audioUnlocked) sounds.wink();
             vibrate(4);
             const shape = document.getElementById('shape-' + side);
             if (!shape) return;
@@ -780,6 +1195,7 @@
             if (idleTime > 12000 && currentExpr === 'normal') {
                 const r = Math.random();
                 if (r < 0.2) {
+                    if (audioUnlocked) sounds.idleLook();
                     // Look around
                     const leftShape = document.getElementById('shape-left');
                     const rightShape = document.getElementById('shape-right');
@@ -796,12 +1212,15 @@
                         rightShape.style.transform = baseTransform;
                     }, 800);
                 } else if (r < 0.4) {
+                    if (audioUnlocked) sounds.idleSleep();
                     setExpression('sleepy', false);
                     setTimeout(() => { if (currentExpr === 'sleepy') setExpression('normal', false); }, 1500);
                 } else if (r < 0.6) {
+                    if (audioUnlocked) sounds.idleCurious();
                     setExpression('curious', false);
                     setTimeout(() => { if (currentExpr === 'curious') setExpression('normal', false); }, 2000);
                 } else if (r < 0.8) {
+                    if (audioUnlocked) sounds.idleThink();
                     setExpression('thinking', false);
                     setTimeout(() => { if (currentExpr === 'thinking') setExpression('normal', false); }, 2000);
                 }
@@ -820,6 +1239,8 @@
                 if (Date.now() - lastInteract > 10000 && currentExpr === 'normal') {
                     const gentleExprs = ['happy', 'curious', 'content', 'thinking', 'neutral', 'focused'];
                     const pick = gentleExprs[Math.floor(Math.random() * gentleExprs.length)];
+                    const soundMap = { 'happy': 'randomHappy', 'curious': 'randomCurious', 'content': 'randomContent', 'thinking': 'randomThinking', 'neutral': 'randomNeutral', 'focused': 'randomFocused' };
+                    if (audioUnlocked && soundMap[pick]) sounds[soundMap[pick]]();
                     setExpression(pick, true);
                     setTimeout(() => { if (currentExpr === pick) setExpression('normal', false); }, 3000 + Math.random() * 2000);
                 }
@@ -827,10 +1248,87 @@
             }, delay);
         }
 
-        // ===== TOUCH / INTERACTION SYSTEM (bug-free) =====
+                // ===== PETTING SYSTEM =====
+        let pettingState = {
+            isPetting: false, petCount: 0, lastPetX: 0, lastPetY: 0,
+            petAccumulated: 0, pettingTimer: null, happyLevel: 0,
+            isHappy: false, happyTimer: null, winkTimer: null
+        };
+
+        function triggerHappyReaction(level) {
+            if (pettingState.isHappy) return;
+            pettingState.isHappy = true;
+            if (level === 1) {
+                if (audioUnlocked) sounds.petHappy();
+                setExpression('happy', true);
+            } else {
+                if (audioUnlocked) sounds.petExcited();
+                setExpression('excited', true);
+                if (level >= 3) vibrate([10, 20, 10, 20, 10]);
+            }
+            let winkCount = 0;
+            const maxWinks = level + 1;
+            pettingState.winkTimer = setInterval(() => {
+                if (winkCount >= maxWinks) { clearInterval(pettingState.winkTimer); pettingState.winkTimer = null; return; }
+                const side = winkCount % 2 === 0 ? 'left' : 'right';
+                wink(side);
+                if (audioUnlocked) sounds.petWink();
+                winkCount++;
+            }, 400);
+            const duration = 1500 + level * 1000;
+            if (pettingState.happyTimer) clearTimeout(pettingState.happyTimer);
+            pettingState.happyTimer = setTimeout(() => {
+                pettingState.isHappy = false;
+                pettingState.happyLevel = 0;
+                if (currentExpr === 'happy' || currentExpr === 'excited') setExpression('normal', false);
+            }, duration);
+        }
+
+        function processPetting(touchX, touchY, eyeSide) {
+            if (!pettingState.isPetting) {
+                pettingState.isPetting = true;
+                pettingState.petCount = 0;
+                pettingState.petAccumulated = 0;
+                pettingState.happyLevel = 0;
+            }
+            const dx = touchX - pettingState.lastPetX;
+            const dy = touchY - pettingState.lastPetY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > 3) {
+                pettingState.petAccumulated += dist;
+                if (pettingState.petAccumulated > 80) {
+                    pettingState.petAccumulated = 0;
+                    pettingState.petCount++;
+                    if (audioUnlocked) sounds.petStroke(pettingState.petCount);
+                    if (pettingState.petCount >= 3 && pettingState.happyLevel < 1) {
+                        pettingState.happyLevel = 1;
+                        triggerHappyReaction(1);
+                    } else if (pettingState.petCount >= 6 && pettingState.happyLevel < 2) {
+                        pettingState.happyLevel = 2;
+                        triggerHappyReaction(2);
+                    } else if (pettingState.petCount >= 10 && pettingState.happyLevel < 3) {
+                        pettingState.happyLevel = 3;
+                        triggerHappyReaction(3);
+                    }
+                    if (Math.random() > 0.6) {
+                        const eye = document.getElementById('eye-' + (Math.random() > 0.5 ? 'left' : 'right'));
+                        if (eye) { eye.classList.add('twitch'); setTimeout(() => eye.classList.remove('twitch'), 250); }
+                    }
+                }
+            }
+            pettingState.lastPetX = touchX;
+            pettingState.lastPetY = touchY;
+            if (pettingState.pettingTimer) clearTimeout(pettingState.pettingTimer);
+            pettingState.pettingTimer = setTimeout(() => {
+                pettingState.isPetting = false;
+                pettingState.petCount = 0;
+                pettingState.petAccumulated = 0;
+            }, 400);
+        }
+
+// ===== TOUCH / INTERACTION SYSTEM (bug-free) =====
 
         // Track active touches to prevent duplicate handling
-        let activeTouchId = null;
         let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
         let longPressTimer = null;
         let isLongPress = false;
@@ -850,6 +1348,7 @@
                 let rapidIndex = exprKeys.indexOf(currentExpr);
                 rapidInterval = setInterval(() => {
                     rapidIndex = (rapidIndex + 1) % exprKeys.length;
+                    if (audioUnlocked) sounds.cycleStep();
                     setExpression(exprKeys[rapidIndex], false);
                     vibrate(2);
                 }, 300);
@@ -871,7 +1370,7 @@
                 updateInteract();
                 eyeTouchStart[side] = true;
 
-                sounds.touch();
+                if (audioUnlocked) sounds.touch();
                 vibrate(4);
 
                 // Wake up if sleepy
@@ -881,8 +1380,19 @@
                     return;
                 }
 
+                pettingState.lastPetX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                pettingState.lastPetY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+                pettingState.lastPetX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                pettingState.lastPetY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
                 startLongPress();
             });
+
+            eye.addEventListener('touchmove', e => {
+                e.stopPropagation();
+                if (e.touches.length > 0) {
+                    processPetting(e.touches[0].clientX, e.touches[0].clientY, side);
+                }
+            }, { passive: true });
 
             eye.addEventListener('pointerup', e => {
                 e.preventDefault();
@@ -900,18 +1410,27 @@
                     exprIndex = exprKeys.indexOf(currentExpr);
                 }
                 isLongPress = false;
+                pettingState.isPetting = false;
+                pettingState.petCount = 0;
+                pettingState.petAccumulated = 0;
             });
 
             eye.addEventListener('pointerleave', e => {
                 clearLongPress();
                 eyeTouchStart[side] = false;
                 isLongPress = false;
+                pettingState.isPetting = false;
+                pettingState.petCount = 0;
+                pettingState.petAccumulated = 0;
             });
 
             eye.addEventListener('pointercancel', e => {
                 clearLongPress();
                 eyeTouchStart[side] = false;
                 isLongPress = false;
+                pettingState.isPetting = false;
+                pettingState.petCount = 0;
+                pettingState.petAccumulated = 0;
             });
         });
 
@@ -964,20 +1483,20 @@
                         // Swipe left = previous expression
                         exprIndex = (exprIndex - 1 + exprKeys.length) % exprKeys.length;
                     }
-                    sounds.swoosh();
+                    if (audioUnlocked) sounds.swipeRight();
                     vibrate(5);
                     setExpression(exprKeys[exprIndex]);
                 } else {
                     // Vertical swipe
                     if (dy < 0) {
                         // Swipe up = happy
-                        sounds.happy();
+                        if (audioUnlocked) sounds.swipeUp();
                         vibrate([5, 10, 5]);
                         setExpression('happy');
                         setTimeout(() => { if (currentExpr === 'happy') setExpression('normal', false); }, 2000);
                     } else {
                         // Swipe down = sad
-                        sounds.sad();
+                        if (audioUnlocked) sounds.swipeDown();
                         vibrate([8, 15, 8]);
                         setExpression('sad');
                         setTimeout(() => { if (currentExpr === 'sad') setExpression('normal', false); }, 2000);
@@ -1011,10 +1530,11 @@
                     vibrate(15);
 
                     if (currentExpr === 'sleepy') {
-                        sounds.boot();
+                        if (audioUnlocked) sounds.wake();
                         setExpression('surprised');
                         setTimeout(() => setExpression('normal'), 600);
                     } else {
+                        if (audioUnlocked) sounds.doubleTap();
                         setExpression('sleepy');
                     }
                 }
@@ -1044,7 +1564,7 @@
                         ensureAudio();
                         updateInteract();
                         vibrate([40, 60, 40, 60, 40]);
-                        sounds.shock();
+                        if (audioUnlocked) sounds.shake();
                         setExpression('shock');
                         setTimeout(() => setExpression('surprised'), 600);
                         setTimeout(() => setExpression('normal'), 1800);
@@ -1070,16 +1590,19 @@
 
                 // Tilt forward (looking down) = sad
                 if (beta > 55 && lastTilt <= 55) {
+                    if (audioUnlocked) sounds.tiltForward();
                     setExpression('sad', false);
                     setTimeout(() => { if (currentExpr === 'sad') setExpression('normal', false); }, 2500);
                 }
                 // Tilt back (looking up) = happy
                 if (beta < -20 && lastTilt >= -20) {
+                    if (audioUnlocked) sounds.tiltBack();
                     setExpression('happy', false);
                     setTimeout(() => { if (currentExpr === 'happy') setExpression('normal', false); }, 2500);
                 }
                 // Tilt left/right rapidly = dizzy
                 if (Math.abs(gamma) > 35 && Math.abs(lastTilt) <= 35) {
+                    if (audioUnlocked) sounds.tiltSide();
                     setExpression('dizzy', false);
                     setTimeout(() => { if (currentExpr === 'dizzy') setExpression('normal', false); }, 2000);
                 }
@@ -1100,8 +1623,9 @@
             else if (e.key === 'w' || e.key === 'W') { wink('left'); }
             else if (e.key === 'e' || e.key === 'E') { wink('right'); }
             else if (e.key === 's' || e.key === 'S') { setExpression('sleepy'); }
-            else if (e.key === 'f' || e.key === 'F') { goFullscreen(); requestWakeLock(); }
+            else if (e.key === 'f' || e.key === 'F') { if (audioUnlocked) sounds.keyFullscreen(); goFullscreen(); requestWakeLock(); }
             else if (e.key >= '1' && e.key <= '9') {
+                if (audioUnlocked) sounds.keyNumber(parseInt(e.key) - 1);
                 const idx = parseInt(e.key) - 1;
                 if (idx < exprKeys.length) setExpression(exprKeys[idx]);
             }
@@ -1112,6 +1636,7 @@
             if (Math.random() > 0.65 && currentExpr === 'normal' && Date.now() - lastInteract > 4000) {
                 const eye = document.getElementById('eye-' + (Math.random() > 0.5 ? 'left' : 'right'));
                 if (eye) {
+                    if (audioUnlocked) sounds.twitch();
                     eye.classList.add('twitch');
                     setTimeout(() => eye.classList.remove('twitch'), 300);
                 }
@@ -1135,7 +1660,10 @@
 
         // ===== BOOT SEQUENCE =====
         function bootSequence() {
-            sounds.boot();
+            if (audioUnlocked && !bootSoundPlayed) {
+                sounds.boot();
+                bootSoundPlayed = true;
+            }
             setTimeout(() => {
                 const overlay = document.getElementById('boot-overlay');
                 if (overlay) overlay.classList.add('hidden');
@@ -1143,10 +1671,17 @@
                     if (overlay) overlay.style.display = 'none';
                 }, 1000);
             }, 1800);
+            bootCompleted = true;
         }
 
         // ===== INIT =====
+        let initComplete = false;
+        let bootCompleted = false;
+        let bootSoundPlayed = false;
+
         function init() {
+            if (initComplete) return;
+            initComplete = true;
             setExpression('normal', false);
             bootSequence();
             setTimeout(scheduleBlink, 2500);
@@ -1156,6 +1691,20 @@
             requestWakeLock();
         }
 
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            audioUnlocked = true;
+            ensureAudio();
+            hideAudioHint();
+            if (bootCompleted && !bootSoundPlayed) {
+                sounds.boot();
+                bootSoundPlayed = true;
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume().catch(() => {});
+            }
+        }
+
         // Start when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
@@ -1163,16 +1712,11 @@
             init();
         }
 
-        // Also init on first interaction (audio unlock)
-        let inited = false;
-        function firstInteraction() {
-            if (inited) return;
-            inited = true;
-            ensureAudio();
-            hideAudioHint();
-        }
-        document.addEventListener('touchstart', firstInteraction, { once: true });
-        document.addEventListener('click', firstInteraction, { once: true });
+        // Unlock audio on first user gesture
+        const unlockEvents = ['pointerdown', 'touchstart', 'click', 'keydown'];
+        unlockEvents.forEach(event => {
+            document.addEventListener(event, unlockAudio, { once: true, passive: true });
+        });
 
     })();
     </script>
